@@ -2,19 +2,20 @@ require("dotenv").config();
 const ethers = require("ethers");
 const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle");
 
-const FROZEN_ASSETS = "0xA1C39D6C3edd16bA13972Abb5a969c5E8b7C770b"; // FROZEN_ASSETS address depending on deploy script
+const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
+
+const FROZEN_ASSETS = "0x429b1DadA1A851018dCa555C12fFC96a7815b566"; // FROZEN_ASSETS address depending on deploy script
 const exposedEOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
 const secureEOA = new ethers.Wallet(process.env.SECURE_PK, provider);
-const abiCall = ["function withdraw() external"]
+const call = 'withdraw';
+const abiCall = [`function ${call}() external`]
 
 // parameters to receive from the front-end:
 // 1. exposed EOA pk
 // 2. secure EOA pk (from wallet)
 // 3. address of smart contract holding frozen assets
 // 4. abi function call to retrieve assets
-async function recoverFunds(exposedWallet, secureWallet, frozenContract, abi) {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
-
+async function recoverFunds(exposedWallet, secureWallet, frozenContract, caller, abi) {
     const flashbotsProvider = await FlashbotsBundleProvider.create(
         provider,
         exposedWallet,
@@ -82,4 +83,4 @@ async function recoverFunds(exposedWallet, secureWallet, frozenContract, abi) {
     });
 }
 
-recoverFunds(exposedEOA, secureEOA, FROZEN_ASSETS, abiCall);
+recoverFunds(exposedEOA, secureEOA, FROZEN_ASSETS, call, abiCall);
