@@ -14,16 +14,8 @@ module.exports = {
   // },
   networks: {
     goerli: {
-      url: process.env.GOERLI_URL,
+      url: process.env.goerli_URL,
       accounts: [process.env.EXPOSED_PK]
-    },
-    rinkeby: {
-      url: process.env.RINKEBY_URL,
-      accounts: [process.env.PRIVATE_KEY]
-    },
-    ropsten: {
-      url: process.env.ROPSTEN_URL,
-      accounts: [process.env.PRIVATE_KEY]
     }
   },
   etherscan: { 

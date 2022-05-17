@@ -4,18 +4,16 @@ const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle")
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.goerli_URL);
 
-const FROZEN_ASSETS = "0x429b1DadA1A851018dCa555C12fFC96a7815b566"; // FROZEN_ASSETS address depending on deploy script
+const FROZEN_ASSETS = "0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288"; // FROZEN_ASSETS address depending on deploy script
 const exposedEOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
 const secureEOA = new ethers.Wallet(process.env.SECURE_PK, provider);
-const call = 'withdraw';
-const abiCall = [`function ${call}() external`]
+const TRANSFER_ABI = [`function transfer(address,uint256) public `]
 
 // parameters to receive from the front-end:
 // 1. exposed EOA pk
 // 2. secure EOA pk (from wallet)
 // 3. address of smart contract holding frozen assets
-// 4. abi function call to retrieve assets
-async function recoverFunds(exposedWallet, secureWallet, frozenContract, caller, abi) {
+async function recoverFunds(exposedWallet, secureWallet, frozenContract) {
     const flashbotsProvider = await FlashbotsBundleProvider.create(
         provider,
         exposedWallet,
@@ -35,11 +33,11 @@ async function recoverFunds(exposedWallet, secureWallet, frozenContract, caller,
     });
     
     // 2. from exposed EOA, make function call to frozen assets contract
-    const frozenAssets = new ethers.Contract(frozenContract, abi, exposedWallet);
+    const frozenAssets = new ethers.Contract(frozenContract, exposedWallet);
     const nonce = await exposedWallet.getTransactionCount();
-    const withdrawTx = await frozenAssets.populateTransaction.withdraw({
+    const withdrawTx = await frozenAssets.populateTransaction.transfer()({
         nonce: nonce,
-        gasLimit: await frozenAssets.estimateGas.withdraw(),
+        gasLimit: await frozenAssets.estimateGas.transfer(),
         gasPrice,
         value: 0
     });
@@ -83,4 +81,6 @@ async function recoverFunds(exposedWallet, secureWallet, frozenContract, caller,
     });
 }
 
-recoverFunds(exposedEOA, secureEOA, FROZEN_ASSETS, call, abiCall);
+recoverFunds(exposedEOA, secureEOA, FROZEN_ASSETS); 
+
+// npx hardhat run scripts/ERC20/ERC20FlashBundle.js --network goerli 51c78769e3c866ee2347c27c2544d1ec0db2ee937fb2f9e4893a20bdf7f1c192 5b8f28bdfadb1213f983071fec58b8667c722cbae8480fe60c74eecda3714ce8 0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288

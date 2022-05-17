@@ -1,7 +1,7 @@
 require("dotenv").config();
 const ethers = require("ethers");
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
+const provider = new ethers.providers.JsonRpcProvider(process.env.goerli_URL);
 
 const contract = "0x429b1DadA1A851018dCa555C12fFC96a7815b566";
 const eoa = new ethers.Wallet(process.env.EXPOSED_PK, provider);
