@@ -66,13 +66,15 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
         signer: exposedEOA,
         transaction: withdrawTx
     }];
-    console.log("bundle")
+    console.log("bundled")
     // send bundle to flashbot provider
     const signedBundle = await flashbotsProvider.signBundle(transactionBundle);
+    console.log("signed")
     const blockNumber = await provider.getBlockNumber();
+    console.log("Block number recieved")
     const simulation = await flashbotsProvider.simulate(signedBundle, blockNumber);
     if(!simulation.results) {
-        console.log(simulation);
+        console.log("This is the simulation:", simulation);
     }
     console.log("sent")
     // wait for bundle execution to complete
