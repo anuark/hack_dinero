@@ -4,19 +4,28 @@ const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle")
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.goerli_URL);
 
-const FROZEN_ASSETS = "0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288"; // FROZEN_ASSETS address depending on deploy script
-const exposedEOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
-const secureEOA = new ethers.Wallet(process.env.SECURE_PK, provider);
-const TRANSFER_ABI = [`function transfer(address,uint256) public `]
+const ERC20_ABI = [
+    "function name() view returns (string)",
+    "function symbol() view returns (string)",
+    "function totalSupply() view returns (uint256)",
+    "function balanceOf(address) view returns (uint)",
+    "function transfer(address,uint256) external returns (bool)",
+];
+
+// FROZEN_ASSETS address depending on deploy script
+const FROZEN_ASSETS = "0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288";
+const EXPOSED_EOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
+const SECURE_EOA = new ethers.Wallet(process.env.SECURE_PK, provider);
+
 
 // parameters to receive from the front-end:
 // 1. exposed EOA pk
 // 2. secure EOA pk (from wallet)
 // 3. address of smart contract holding frozen assets
-async function recoverFunds(exposedWallet, secureWallet, frozenContract) {
+async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
     const flashbotsProvider = await FlashbotsBundleProvider.create(
         provider,
-        exposedWallet,
+        exposedEOA,
         'https://relay-goerli.flashbots.net/',
         'goerli'
     );
@@ -24,43 +33,40 @@ async function recoverFunds(exposedWallet, secureWallet, frozenContract) {
     const gasPrice = ethers.utils.parseUnits("1", "gwei");
 
     // 1. fund exposed EOA from secure EOA
-    const fundTransaction = await secureWallet.signTransaction({
-        nonce: await secureWallet.getTransactionCount(),
-        to: exposedWallet.address,
+    const fundTransaction = await secureEOA.signTransaction({
+        nonce: await secureEOA.getTransactionCount(),
+        to: exposedEOA.address,
         gasPrice,
         gasLimit: 21000,
         value: ethers.utils.parseEther(".1")
     });
-    
-    // 2. from exposed EOA, make function call to frozen assets contract
-    const frozenAssets = new ethers.Contract(frozenContract, exposedWallet);
-    const nonce = await exposedWallet.getTransactionCount();
-    const withdrawTx = await frozenAssets.populateTransaction.transfer()({
-        nonce: nonce,
-        gasLimit: await frozenAssets.estimateGas.transfer(),
-        gasPrice,
-        value: 0
-    });
+    console.log("1")
+    // 2. Find out how many tokens
+    const frozenAssets = new ethers.Contract(frozenContract, abi, exposedEOA);
+    const balance = await frozenAssets.balanceOf(exposedEOA.address);
+    console.log("2")
 
-    // 3. from exposed EOA, send frozen assets to secure EOA
-    const fundTransaction2 = await exposedWallet.signTransaction({
-        nonce: nonce + 1,
-        to: secureWallet.address,
-        gasPrice,
-        gasLimit: 21000,
-        value: ethers.utils.parseEther(".1")
-    });
+    // 3. from exposed EOA, make function call to frozen assets contract
+    const withdrawTx = await frozenAssets.populateTransaction.transfer(secureEOA.address, balance)
+  
+    console.log("3")
 
+    // n/a from exposed EOA, send frozen assets to secure EOA
+    // const fundTransaction2 = await exposedEOA.signTransaction({
+    //     nonce: nonce + 1,
+    //     to: secureEOA.address,
+    //     gasPrice,
+    //     gasLimit: 21000,
+    //     value: ethers.utils.parseEther(".1")
+    // });
     // bundle txs: [1,2,3]^
     const transactionBundle = [{
         signedTransaction: fundTransaction
     }, {
-        signer: exposedWallet,
+        signer: exposedEOA,
         transaction: withdrawTx
-    }, {
-        signedTransaction: fundTransaction2
     }];
-
+    console.log("bundle")
     // send bundle to flashbot provider
     const signedBundle = await flashbotsProvider.signBundle(transactionBundle);
     const blockNumber = await provider.getBlockNumber();
@@ -68,7 +74,7 @@ async function recoverFunds(exposedWallet, secureWallet, frozenContract) {
     if(!simulation.results) {
         console.log(simulation);
     }
-
+    console.log("sent")
     // wait for bundle execution to complete
     provider.on("block", async (blockNumber) => {
         console.log(blockNumber);
@@ -81,6 +87,4 @@ async function recoverFunds(exposedWallet, secureWallet, frozenContract) {
     });
 }
 
-recoverFunds(exposedEOA, secureEOA, FROZEN_ASSETS); 
-
-// npx hardhat run scripts/ERC20/ERC20FlashBundle.js --network goerli 51c78769e3c866ee2347c27c2544d1ec0db2ee937fb2f9e4893a20bdf7f1c192 5b8f28bdfadb1213f983071fec58b8667c722cbae8480fe60c74eecda3714ce8 0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288
+recoverFunds(EXPOSED_EOA, SECURE_EOA, FROZEN_ASSETS, ERC20_ABI); 
