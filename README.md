@@ -5,7 +5,7 @@
 erc20 contract deployed to: 0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288        
 https://goerli.etherscan.io/address/0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288#readContract
 
-Owner/Exposed public key is: 0x3118Eb962ed7Eee7AC94883fF0a4e5Ff60d432F7
+Owner/Exposed private key is: 0x3118Eb962ed7Eee7AC94883fF0a4e5Ff60d432F7
 
 
 When I try to run this command `npx hardhat run scripts/ERC20/ERC20FlashBundle.js --network goerli`       
