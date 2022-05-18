@@ -2,7 +2,7 @@ require("dotenv").config();
 const ethers = require("ethers");
 const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle");
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.goerli_URL);
+const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
 
 const ERC20_ABI = [
     "function name() view returns (string)",
@@ -13,7 +13,7 @@ const ERC20_ABI = [
 ];
 
 // FROZEN_ASSETS address depending on deploy script
-const FROZEN_ASSETS = "0x9e9DCd70deB5CE5e2FBfFD3bd3bb64883CFf6288";
+const FROZEN_ASSETS = "0x45Ac2eF3a0572F2B5ae36B0a11619ce82BEb3bDa";
 const EXPOSED_EOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
 const SECURE_EOA = new ethers.Wallet(process.env.SECURE_PK, provider);
 
@@ -43,11 +43,17 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
     console.log("1")
     // 2. Find out how many tokens
     const frozenAssets = new ethers.Contract(frozenContract, abi, exposedEOA);
-    const balance = await frozenAssets.balanceOf(exposedEOA.address);
-    console.log("2", balance)
+    const balance = ethers.BigNumber.from(await frozenAssets.balanceOf(exposedEOA.address));
+    console.log("2")
 
     // 3. from exposed EOA, make function call to frozen assets contract
-    const withdrawTx = await frozenAssets.populateTransaction.transfer(secureEOA.address, balance)
+    const nonce = ethers.BigNumber.from(await exposedEOA.getTransactionCount())
+    const withdrawTx = await frozenAssets.populateTransaction.transfer(secureEOA.address, balance, {
+        nonce: nonce,
+        gasLimit: ethers.BigNumber.from( await frozenAssets.estimateGas.transfer(secureEOA.address, balance)),
+        gasPrice,
+        value: 0
+    })
   
     console.log("3")
 
@@ -62,7 +68,8 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
     // bundle txs: [1,2,3]^
     const transactionBundle = [{
         signedTransaction: fundTransaction
-    }, {
+    },
+    {
         signer: exposedEOA,
         transaction: withdrawTx
     }];

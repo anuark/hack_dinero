@@ -14,7 +14,7 @@ module.exports = {
   // },
   networks: {
     goerli: {
-      url: process.env.goerli_URL,
+      url: process.env.GOERLI_URL,
       accounts: [process.env.EXPOSED_PK]
     }
   },
