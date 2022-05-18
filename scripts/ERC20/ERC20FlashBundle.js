@@ -17,7 +17,6 @@ const FROZEN_ASSETS = "0x45Ac2eF3a0572F2B5ae36B0a11619ce82BEb3bDa";
 const EXPOSED_EOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
 const SECURE_EOA = new ethers.Wallet(process.env.SECURE_PK, provider);
 
-
 // parameters to receive from the front-end:
 // 1. exposed EOA pk
 // 2. secure EOA pk (from wallet)
@@ -40,32 +39,20 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
         gasLimit: 21000,
         value: ethers.utils.parseEther(".1")
     });
-    console.log("1")
+
     // 2. Find out how many tokens
     const frozenAssets = new ethers.Contract(frozenContract, abi, exposedEOA);
-    const balance = ethers.BigNumber.from(await frozenAssets.balanceOf(exposedEOA.address));
-    console.log("2")
+    const balance = await frozenAssets.balanceOf(exposedEOA.address);
 
     // 3. from exposed EOA, make function call to frozen assets contract
-    const nonce = ethers.BigNumber.from(await exposedEOA.getTransactionCount())
+    const nonce = await exposedEOA.getTransactionCount()
     const withdrawTx = await frozenAssets.populateTransaction.transfer(secureEOA.address, balance, {
         nonce: nonce,
-        gasLimit: ethers.BigNumber.from( await frozenAssets.estimateGas.transfer(secureEOA.address, balance)),
+        gasLimit:  await frozenAssets.estimateGas.transfer(secureEOA.address, balance),
         gasPrice,
         value: 0
     })
-  
-    console.log("3")
 
-    // n/a from exposed EOA, send frozen assets to secure EOA
-    // const fundTransaction2 = await exposedEOA.signTransaction({
-    //     nonce: nonce + 1,
-    //     to: secureEOA.address,
-    //     gasPrice,
-    //     gasLimit: 21000,
-    //     value: ethers.utils.parseEther(".1")
-    // });
-    // bundle txs: [1,2,3]^
     const transactionBundle = [{
         signedTransaction: fundTransaction
     },
