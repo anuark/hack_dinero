@@ -44,7 +44,7 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
     // 2. Find out how many tokens
     const frozenAssets = new ethers.Contract(frozenContract, abi, exposedEOA);
     const balance = await frozenAssets.balanceOf(exposedEOA.address);
-    console.log("2")
+    console.log("2", balance)
 
     // 3. from exposed EOA, make function call to frozen assets contract
     const withdrawTx = await frozenAssets.populateTransaction.transfer(secureEOA.address, balance)
