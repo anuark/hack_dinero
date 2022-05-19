@@ -7,25 +7,19 @@ require("hardhat-gas-reporter");
 
 module.exports = {
   solidity: "0.8.4",
-  gasReporter: {
-    currency: 'USD',
-    coinmarketcap: process.env.COINMARKET_KEY,
-    gasPriceApi: "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice"
-  },
   networks: {
-    rinkeby: {
-      url: process.env.RINKEBY_URL,
-      accounts: [process.env.METAMASK_PRIVATE_KEY]
-    },
-    ropsten: {
-      url: process.env.ROPSTEN_URL,
-      accounts: [process.env.METAMASK_PRIVATE_KEY]
+    goerli: {
+      url: process.env.GOERLI_URL,
+      accounts: [process.env.EXPOSED_PK],
+      gas: 2100000,
+      gasPrice: 8000000000
     }
   },
   etherscan: { 
     apiKey: {
+      goerli: process.env.ETHERSCAN_KEY,
       rinkeby: process.env.ETHERSCAN_KEY,
-      ropsten: process.env.ETHERSCAN_KEY,
+      ropsten: process.env.ETHERSCAN_KEY
     }
   }
 };

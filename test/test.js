@@ -1,11 +1,11 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("FrozenERC20", function () {
+  it("Should should mint 10 tokens to the deployer", async function () {
+    const FrozenERC20 = await ethers.getContractFactory("FrozenERC20");
+    const frozenERC20 = await FrozenERC20.deploy("Hello, world!");
+    await frozenERC20.deployed();
 
     expect(await greeter.greet()).to.equal("Hello, world!");
 
