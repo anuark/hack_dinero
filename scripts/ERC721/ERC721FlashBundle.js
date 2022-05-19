@@ -9,7 +9,7 @@ const ERC721_ABI = [
     "function symbol() public view virtual override returns (string memory)",
     "function _exists(uint256 tokenId) internal view virtual returns (bool)",
     "function _safeMint(address to, uint256 tokenId) internal virtual",
-    "function _transfer(address from, address to, uint256 tokenId) internal virtual",
+    "function transferFrom(address from, address to, uint256 tokenId) public virtual override",
     "function balanceOf(address owner) public view virtual override returns (uint256)",
     "function ownerOf(uint256 tokenId) public view virtual override returns (address)",
 ];
@@ -41,7 +41,7 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
         gasLimit: 21000,
         value: ethers.utils.parseEther(".1")
     });
-
+    console.log("1");
     // 2.1 Find out how many tokens the address holds
     const NFTContract = new ethers.Contract(frozenContract, abi, exposedEOA);
     const balance = await NFTContract.balanceOf(exposedEOA.address);
@@ -55,6 +55,12 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
             i++;
         }
     }
+    console.log("2");
+
+    // 3.0 initialize Tx bundle before it's used
+    const transactionBundle = [{
+        signedTransaction: fundTransaction
+    }];
 
     // 3. from exposed EOA, make function call to frozen assets contract
     const nonce = await exposedEOA.getTransactionCount()
@@ -62,9 +68,9 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
     for(let i=0; i<balance; i++) {
         let scopedNonce = nonce; // Not sure if global nonce is being used elsewhere
         let token = ownedTokens[i];
-        withdrawTxs[i] = await NFTContract.populateTransaction._transfer(exposedEOA.address,secureEOA.address, token, {
+        withdrawTxs[i] = await NFTContract.populateTransaction.transferFrom(exposedEOA.address,secureEOA.address, token, {
             nonce: scopedNonce,
-            gasLimit:  await NFTContract.estimateGas._transfer(exposedEOA.address, secureEOA.address, token),
+            gasLimit:  await NFTContract.estimateGas.transferFrom(exposedEOA.address, secureEOA.address, token),
             gasPrice,
             value: 0
         })
@@ -72,9 +78,6 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
         scopedNonce++;
     }
 
-    const transactionBundle = [{
-        signedTransaction: fundTransaction
-    }];
 
     console.log("bundled with", transactionBundle.length - 1, "tokens to be transferred")
     // send bundle to flashbot provider
