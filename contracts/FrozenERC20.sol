@@ -23,7 +23,7 @@ contract FrozenERC20 is IERC20 {
     mapping(address => uint256) balances;
     mapping(address => mapping (address => uint256)) allowed;
 
-    uint256 totalSupply_ = 1 ether;
+    uint256 totalSupply_ = 100 ether;
 
     constructor() payable {
         balances[msg.sender] = totalSupply_;
