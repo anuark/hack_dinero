@@ -1,27 +1,19 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-contract FrozenAssets {
-    address owner = msg.sender;
-    constructor() payable {}
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-    function withdraw() external {
-        require(msg.sender == owner);
-        (bool s, ) = msg.sender.call{ value: address(this).balance }("");
-        require(s);
+contract FrozenERC721 is ERC721 {
+
+    address public owner;
+    uint256 public tokenCounter;
+
+    constructor(string memory name, string memory symbol) payable ERC721(name, symbol) {
+        owner = msg.sender;
     }
-
-    function withdraw2(uint256 val) external {
-        require(msg.sender == owner);
-        (bool s, ) = msg.sender.call{ value: val }("");
-        require(s);
+    
+    function mint() public {
+        _safeMint(owner, tokenCounter);
+        tokenCounter++;
     }
-
-    function withdraw3() public {
-        require(msg.sender == owner);
-        (bool s, ) = msg.sender.call{ value: address(this).balance }("");
-        require(s);
-    }
-
-    receive() external payable {}
 }
