@@ -41,45 +41,45 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
         gasLimit: 21000,
         value: ethers.utils.parseEther(".1")
     });
-    console.log("1");
+
     // 2.1 Find out how many tokens the address holds
     const NFTContract = new ethers.Contract(frozenContract, abi, exposedEOA);
-    const balance = await NFTContract.balanceOf(exposedEOA.address);
+    const balance = parseInt(await NFTContract.balanceOf(exposedEOA.address), 16);
+    console.log("address NFT count is: ", balance)
 
     // 2.2 Find out which tokens the address holds
     const ownedTokens = [];
+    let uniqueIVar = 0;
     while(ownedTokens.length < balance) {
-        let i=0;
-        if(await NFTContract.ownerOf(i) == exposedEOA.address) {
-            // console.log(await NFTContract.ownerOf(i));
-            ownedTokens.push(i);
-            i++;
-        }
+        if(await NFTContract.ownerOf(uniqueIVar) == exposedEOA.address) {
+            ownedTokens.push(uniqueIVar);
+        } 
+        uniqueIVar++;
     }
-    console.log("2");
 
     // 3.0 initialize Tx bundle before it's used
-    const transactionBundle = [{
-        signedTransaction: fundTransaction
-    },];
+    const transactionBundle = [{signedTransaction: fundTransaction}];
 
     // 3. from exposed EOA, make function call to frozen assets contract
     const nonce = await exposedEOA.getTransactionCount()
+    
+    let scopedNonce = nonce; // Not sure if global nonce is being used elsewhere
     for(let i=0; i<balance; i++) {
-        let scopedNonce = nonce; // Not sure if global nonce is being used elsewhere
         let token = ownedTokens[i];
-        const withdrawTxs = await NFTContract.populateTransaction.transferFrom(exposedEOA.address,secureEOA.address, token, {
+        const withdrawTx = await NFTContract.populateTransaction.transferFrom(exposedEOA.address,secureEOA.address, token, {
             nonce: scopedNonce,
             gasLimit:  await NFTContract.estimateGas.transferFrom(exposedEOA.address, secureEOA.address, token),
             gasPrice,
             value: 0
         })
-        transactionBundle.push({signedTransaction: withdrawTxs});
+        transactionBundle.push({
+            signer: exposedEOA,
+            transaction: withdrawTx
+        });
         scopedNonce++;
     }
+    console.log("this is the tx bundle: ", transactionBundle, "bundled with", transactionBundle.length - 1, "tokens to be transferred")
 
-
-    console.log("bundled with", transactionBundle.length - 1, "tokens to be transferred")
     // send bundle to flashbot provider
     const signedBundle = await flashbotsProvider.signBundle(transactionBundle);
     console.log("signed")
