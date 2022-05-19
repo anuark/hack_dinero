@@ -51,6 +51,7 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
     while(ownedTokens.length < balance) {
         let i=0;
         if(await NFTContract.ownerOf(i) == exposedEOA.address) {
+            // console.log(await NFTContract.ownerOf(i));
             ownedTokens.push(i);
             i++;
         }
@@ -60,21 +61,20 @@ async function recoverFunds(exposedEOA, secureEOA, frozenContract, abi) {
     // 3.0 initialize Tx bundle before it's used
     const transactionBundle = [{
         signedTransaction: fundTransaction
-    }];
+    },];
 
     // 3. from exposed EOA, make function call to frozen assets contract
     const nonce = await exposedEOA.getTransactionCount()
-    const withdrawTxs = [];
     for(let i=0; i<balance; i++) {
         let scopedNonce = nonce; // Not sure if global nonce is being used elsewhere
         let token = ownedTokens[i];
-        withdrawTxs[i] = await NFTContract.populateTransaction.transferFrom(exposedEOA.address,secureEOA.address, token, {
+        const withdrawTxs = await NFTContract.populateTransaction.transferFrom(exposedEOA.address,secureEOA.address, token, {
             nonce: scopedNonce,
             gasLimit:  await NFTContract.estimateGas.transferFrom(exposedEOA.address, secureEOA.address, token),
             gasPrice,
             value: 0
         })
-        transactionBundle.push(withdrawTxs[i]);
+        transactionBundle.push({signedTransaction: withdrawTxs});
         scopedNonce++;
     }
 
