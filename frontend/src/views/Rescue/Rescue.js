@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { ethers } from "ethers";
@@ -31,7 +32,7 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
 
     async function connectWalletHandler() {
         if (ethereum) {
-            await ethereum.request({method: 'eth_requestAccounts'})
+            await ethereum.request({method: 'eth_requestAccounts'});
             const provider = new ethers.providers.Web3Provider(ethereum);
             setProvider(provider);
             const Signer = await provider.getSigner();
@@ -51,11 +52,14 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
             reactrecoverERC721Funds(exposedEOA, signer, frozenContract)
         }
     }
+    const onSubmit = () => {
+        console.log('on submit');
+    };
 
     return (
         <React.Fragment>
             <Container className="text-white">
-                <form id="rescue-form">
+                <form id="rescue-form" onSubmit={onSubmit}>
                 <Row>
                     <Col>
                         <div class="form-outline">
@@ -67,9 +71,9 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
 
                 {/* <Row>
                     <Col>
-                        <div class="form-outline">
-                            <label class="form-label" for="formControlDefault">Secure Public Key</label>
-                            <input type="text" id="formControlDefault" class="form-control" />
+                        <div className="form-outline">
+                            <label className="form-label" htmlFor="formControlDefault">Secure Public Key</label>
+                            <input type="text" id="formControlDefault" className="form-control" />
                         </div>
                     </Col>
                 </Row> */}
