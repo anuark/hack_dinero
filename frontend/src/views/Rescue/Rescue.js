@@ -70,15 +70,6 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
                     </Col>
                 </Row>
 
-                {/* <Row>
-                    <Col>
-                        <div className="form-outline">
-                            <label className="form-label" htmlFor="formControlDefault">Secure Public Key</label>
-                            <input type="text" id="formControlDefault" className="form-control" />
-                        </div>
-                    </Col>
-                </Row> */}
-
                 <Row>
                     <Col>
                         <div class="form-outline">
@@ -93,26 +84,11 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
                         <div class="form-outline">
                             <p>Type of Token:</p>
                             <div>
-                                <input 
-                                    name="selector"
-                                    type="radio" 
-                                    value="20"
-                                    id="20"
-                                /> ERC20
+                                <input name="selector" type="radio" value="20" id="20"/> ERC20
                             </div>
                             <div>
-                                <input
-                                    name="selector"
-                                    type="radio" 
-                                    value="721"
-                                    id="721"
-                                /> ERC721
+                                <input name="selector" type="radio" value="721" id="721"/> ERC721
                             </div>
-
-                            {/* <label class="form-label" for="formControlSm">Type of asset<br/>
-                                <input type="radio" value="20" checked={tokenType === 20} onChange={updateType} id="" class="" /> ERC20<br/>
-                                <input type="radio" value="721" checked={tokenType === 721} onChange={updateType} id="" class="" /> ERC721
-                            </label> */}
                         </div>
                     </Col>
                 </Row>
