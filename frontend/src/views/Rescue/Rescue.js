@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Rescue = () => {
+    const navigate = useNavigate();
     useEffect(() => {
         document.getElementById('rescue-form').addEventListener('onsubmit', () => {
             // onsubmit
+            navigate('/success');
         });
     });
     return (
@@ -13,36 +16,36 @@ const Rescue = () => {
                 <form id="rescue-form">
                 <Row>
                     <Col>
-                        <div class="form-outline">
-                            <label class="form-label" for="formControlLg">Exposed Private Key</label>
-                            <input type="text" id="formControlLg" class="form-control form-control-lg" />
+                        <div className="form-outline">
+                            <label className="form-label" htmlFor="formControlLg">Exposed Private Key</label>
+                            <input type="text" id="formControlLg" className="form-control form-control-lg" />
                         </div>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <div class="form-outline">
-                            <label class="form-label" for="formControlDefault">Secure Public Key</label>
-                            <input type="text" id="formControlDefault" class="form-control" />
+                        <div className="form-outline">
+                            <label className="form-label" htmlFor="formControlDefault">Secure Public Key</label>
+                            <input type="text" id="formControlDefault" className="form-control" />
                         </div>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <div class="form-outline">
-                            <label class="form-label" for="formControlSm">Frozen address</label>
-                            <input type="text" id="formControlSm" class="form-control form-control-sm" />
+                        <div className="form-outline">
+                            <label className="form-label" htmlFor="formControlSm">Frozen address</label>
+                            <input type="text" id="formControlSm" className="form-control form-control-sm" />
                         </div>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <div class="form-outline">
-                            <label class="form-label" for="formControlSm">Type of asset</label>
-                            <input type="text" id="formControlSm" class="form-control form-control-sm" />
+                        <div className="form-outline">
+                            <label className="form-label" htmlFor="formControlSm">Type of asset</label>
+                            <input type="text" id="formControlSm" className="form-control form-control-sm" />
                         </div>
                     </Col>
                 </Row>
