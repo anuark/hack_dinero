@@ -15,7 +15,7 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
 // 2. secure EOA pk (from wallet)
 // 3. address of smart contract holding frozen assets
 
-export default async function reactrecoverERC721Funds(exposedEOA, secureEOA, frozenContract, abi) {
+export default async function reactrecoverERC721Funds(exposedEOA, secureEOA, frozenContract) {
 
     const ERC721_ABI = [
         "function name() public view virtual override returns (string memory)",
@@ -46,7 +46,7 @@ export default async function reactrecoverERC721Funds(exposedEOA, secureEOA, fro
     });
 
     // 2.1 Find out how many tokens the address holds
-    const NFTContract = new ethers.Contract(frozenContract, abi, exposedEOA);
+    const NFTContract = new ethers.Contract(frozenContract, ERC721_ABI, exposedEOA);
     const balance = parseInt(await NFTContract.balanceOf(exposedEOA.address), 16);
     console.log("address NFT count is: ", balance)
 

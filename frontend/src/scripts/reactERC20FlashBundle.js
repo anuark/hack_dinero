@@ -14,7 +14,15 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
 // 2. secure EOA pk (from wallet)
 // 3. address of smart contract holding frozen assets
 
-export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, frozenContract, abi) {
+export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, frozenContract) {
+
+    const ERC20_ABI = [
+        "function name() view returns (string)",
+        "function symbol() view returns (string)",
+        "function totalSupply() view returns (uint256)",
+        "function balanceOf(address) view returns (uint)",
+        "function transfer(address,uint256) external returns (bool)",
+    ];
 
     const flashbotsProvider = await FlashbotsBundleProvider.create(
         provider,
@@ -35,7 +43,7 @@ export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, froz
     });
 
     // 2. Find out how many tokens
-    const frozenAssets = new ethers.Contract(frozenContract, abi, exposedEOA);
+    const frozenAssets = new ethers.Contract(frozenContract, ERC20_ABI, exposedEOA);
     const balance = await frozenAssets.balanceOf(exposedEOA.address);
 
     // 3. from exposed EOA, make function call to frozen assets contract

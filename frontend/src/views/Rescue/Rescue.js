@@ -27,26 +27,10 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
 
     async function rescueFunc(exposedEOA, addr, frozenContract, type) {
         if(type === 20) {
-            const ERC20_ABI = [
-                "function name() view returns (string)",
-                "function symbol() view returns (string)",
-                "function totalSupply() view returns (uint256)",
-                "function balanceOf(address) view returns (uint)",
-                "function transfer(address,uint256) external returns (bool)",
-            ];
-            reactrecoverERC20Funds(exposedEOA, addr, frozenContract, ERC20_ABI);
+            reactrecoverERC20Funds(exposedEOA, addr, frozenContract);
         }
         else if(type === 721) {
-            const ERC721_ABI = [
-                "function name() public view virtual override returns (string memory)",
-                "function symbol() public view virtual override returns (string memory)",
-                "function _exists(uint256 tokenId) internal view virtual returns (bool)",
-                "function _safeMint(address to, uint256 tokenId) internal virtual",
-                "function transferFrom(address from, address to, uint256 tokenId) public virtual override",
-                "function balanceOf(address owner) public view virtual override returns (uint256)",
-                "function ownerOf(uint256 tokenId) public view virtual override returns (address)",
-            ];
-            reactrecoverERC721Funds(exposedEOA, addr, frozenContract, ERC721_ABI)
+            reactrecoverERC721Funds(exposedEOA, addr, frozenContract)
         }
     }
 
