@@ -8,11 +8,11 @@ const { ethereum } = window;
 
 
 const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
-    useEffect(() => {
-        document.getElementById('rescue-form').addEventListener('onsubmit', () => {
-            // onsubmit
-        });
-    });
+    // useEffect(() => {
+    //     document.getElementById('rescue-form').addEventListener('onsubmit', () => {
+    //         // onsubmit
+    //     });
+    // });
 
     const [exposedEOA, setExposedEOA] = useState(0);
     const [frozenContract, setFrozenContract] = useState(0);
@@ -45,14 +45,12 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
         }
     }
 
-    async function rescueFunc(exposedEOA, signer, frozenContract, type) {
-        // 20 radio
-        if(type === 20) {
+    async function rescueFunc(exposedEOA, frozenContract) {
+        if(document.getElementById('20').checked) {
             reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
         }
-        // 721 radio
-        else if(type === 721) {
-            reactrecoverERC721Funds(exposedEOA, signer, frozenContract)
+        else if(document.getElementById('721').checked) {
+            reactrecoverERC721Funds(exposedEOA, signer, frozenContract);
         }
     }
     const onSubmit = () => {
@@ -96,18 +94,18 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
                             <p>Type of Token:</p>
                             <div>
                                 <input 
+                                    name="selector"
                                     type="radio" 
                                     value="20"
-                                    checked={tokenType === 20}
-                                    onChange={updateType}
+                                    id="20"
                                 /> ERC20
                             </div>
                             <div>
-                                <input 
+                                <input
+                                    name="selector"
                                     type="radio" 
                                     value="721"
-                                    checked={tokenType === 721}
-                                    onChange={updateType}
+                                    id="721"
                                 /> ERC721
                             </div>
 
@@ -123,7 +121,8 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
                         <Button onClick={connectWalletHandler}>Connect Wallet</Button>
                     </Col>
                     <Col>
-                        <Button type="submit" onClick={() => rescueFunc(exposedEOA, signer, frozenContract, )}>Initiate Rescue</Button>
+                        <Button onClick={() => rescueFunc(exposedEOA, signer, frozenContract)}>Initiate Rescue</Button> 
+                        {/* commented out `type=submit` */}
                     </Col>
                 </Row>
                 </form>
