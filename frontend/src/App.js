@@ -4,14 +4,20 @@ import Home from './views/Home/Home.js';
 import Header from './views/Header.js';
 import Rescue from './views/Rescue/Rescue.js';
 import Footer from './views/Footer.js';
+import React, { useState } from 'react';
 
 function App() {
+
+    const [provider, setProvider] = useState("");
+    const [addr, setAddr] = useState(0)
+    const [signer, setSigner] = useState({})
+
     return (
         <div className="App">
             <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/rescue" element={<Rescue />} />
+                <Route path="/rescue" element={<Rescue signer={signer} setSigner={setSigner} addr={addr} setAddr={setAddr} provider={provider} setProvider={setProvider} />} />
             </Routes>
             <Footer />
         </div>

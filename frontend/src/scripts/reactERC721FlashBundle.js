@@ -4,16 +4,29 @@ const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle")
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
 
+
 // FROZEN_ASSETS address depending on deploy script
-const FROZEN_ASSETS = "0xa7C14aCAE047462A895EE3AF152A1538DB8f5aE0";
-const EXPOSED_EOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
-const SECURE_EOA = new ethers.Wallet(process.env.SECURE_PK, provider);
+// const FROZEN_ASSETS = "0xa7C14aCAE047462A895EE3AF152A1538DB8f5aE0";
+// const EXPOSED_EOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
+// const SECURE_EOA = new ethers.Wallet(process.env.SECURE_PK, provider);
 
 // parameters to receive from the front-end:
 // 1. exposed EOA pk
 // 2. secure EOA pk (from wallet)
 // 3. address of smart contract holding frozen assets
-async function recoverERC721Funds(exposedEOA, secureEOA, frozenContract, abi) {
+
+export default async function reactrecoverERC721Funds(exposedEOA, secureEOA, frozenContract, abi) {
+
+    const ERC721_ABI = [
+        "function name() public view virtual override returns (string memory)",
+        "function symbol() public view virtual override returns (string memory)",
+        "function _exists(uint256 tokenId) internal view virtual returns (bool)",
+        "function _safeMint(address to, uint256 tokenId) internal virtual",
+        "function transferFrom(address from, address to, uint256 tokenId) public virtual override",
+        "function balanceOf(address owner) public view virtual override returns (uint256)",
+        "function ownerOf(uint256 tokenId) public view virtual override returns (address)",
+    ];
+
     const flashbotsProvider = await FlashbotsBundleProvider.create(
         provider,
         exposedEOA,
@@ -92,4 +105,4 @@ async function recoverERC721Funds(exposedEOA, secureEOA, frozenContract, abi) {
     });
 }
 
-export default function recoverERC721Funds(EXPOSED_EOA, SECURE_EOA, FROZEN_ASSETS, ERC721_ABI); 
+// reactrecoverERC721Funds(EXPOSED_EOA, SECURE_EOA, FROZEN_ASSETS, ERC721_ABI); 
