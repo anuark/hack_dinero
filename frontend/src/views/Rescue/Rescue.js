@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { ethers } from "ethers";
 import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
@@ -7,24 +8,48 @@ const { ethereum } = window;
 
 
 const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
+    useEffect(() => {
+        document.getElementById('rescue-form').addEventListener('onsubmit', () => {
+            // onsubmit
+        });
+    });
+
+    const [exposedEOA, setExposedEOA] = useState(0);
+    const [frozenContract, setFrozenContract] = useState(0);
+    const [tokenType, setTokenType] = useState(true);
+
+    const updateExposedEOA = (e) => {
+        setExposedEOA(e.target.value);
+    }
+
+    const updatedFrozenContract = (e) => {
+        setFrozenContract(e.target.value);
+    }
+
+    const updateType = (e) => {
+        setTokenType(e.target.value)
+    }
+
     async function connectWalletHandler() {
         if (ethereum) {
             await ethereum.request({method: 'eth_requestAccounts'});
             const provider = new ethers.providers.Web3Provider(ethereum);
             setProvider(provider);
-            const signer = await provider.getSigner();
-            setSigner(signer);
+            const Signer = await provider.getSigner();
+            setSigner(Signer);
             const address = await signer.getAddress();
             setAddr(address);
         }
     }
 
-    async function rescueFunc(exposedEOA, addr, frozenContract, type) {
+    async function rescueFunc(exposedEOA, signer, frozenContract, type) {
+        // TRUE radio
         if(type === 20) {
-            reactrecoverERC20Funds(exposedEOA, addr, frozenContract);
+            reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
         }
+        // FALSE radio
         else if(type === 721) {
-            reactrecoverERC721Funds(exposedEOA, addr, frozenContract)
+            reactrecoverERC721Funds(exposedEOA, signer, frozenContract)
         }
     }
     const onSubmit = () => {
@@ -37,9 +62,9 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
                 <form id="rescue-form" onSubmit={onSubmit}>
                 <Row>
                     <Col>
-                        <div className="form-outline">
-                            <label className="form-label" htmlFor="formControlLg">Exposed Private Key</label>
-                            <input type="text" id="formControlLg" className="form-control form-control-lg" />
+                        <div class="form-outline">
+                            <label class="form-label" for="formControlLg">Exposed Private Key</label>
+                            <input type="text" id="formControlLg" class="form-control form-control-lg" onChange={updateExposedEOA} /><br/>
                         </div>
                     </Col>
                 </Row>
@@ -55,18 +80,20 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
 
                 <Row>
                     <Col>
-                        <div className="form-outline">
-                            <label className="form-label" htmlFor="formControlSm">Frozen address</label>
-                            <input type="text" id="formControlSm" className="form-control form-control-sm" />
+                        <div class="form-outline">
+                            <label class="form-label" for="formControlSm">Frozen address</label>
+                            <input type="text" id="formControlSm" class="form-control form-control-sm" onChange={updatedFrozenContract}/><br/>
                         </div>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <div className="form-outline">
-                            <label className="form-label" htmlFor="formControlSm">Type of asset</label>
-                            <input type="text" id="formControlSm" className="form-control form-control-sm" />
+                        <div class="form-outline">
+                            <label class="form-label" for="formControlSm">Type of asset<br/>
+                                <input type="radio" value="ERC20"  id="" class="" /> ERC20<br/>
+                                <input type="radio" value="ERC721"  id="" class="" /> ERC721
+                            </label>
                         </div>
                     </Col>
                 </Row>
@@ -75,7 +102,7 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
                         <Button onClick={connectWalletHandler}>Connect Wallet</Button>
                     </Col>
                     <Col>
-                        <Button type="submit" onClick={rescueFunc}>Initiate Rescue</Button>
+                        <Button type="submit" onClick={() => rescueFunc(exposedEOA, signer, frozenContract, )}>Initiate Rescue</Button>
                     </Col>
                 </Row>
                 </form>
