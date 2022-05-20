@@ -4,16 +4,16 @@ import { useNavigate } from 'react-router-dom';
 
 const Rescue = () => {
     const navigate = useNavigate();
-    useEffect(() => {
-        document.getElementById('rescue-form').addEventListener('onsubmit', () => {
-            // onsubmit
-            navigate('/success');
-        });
-    });
+    const onSubmit = (ev) => {
+        ev.preventDefault();
+        console.log('navigating to success');
+        navigate('/success');
+    }
+
     return (
         <React.Fragment>
             <Container className="text-white">
-                <form id="rescue-form">
+                <form id="rescue-form" onSubmit={onSubmit}>
                 <Row>
                     <Col>
                         <div className="form-outline">
