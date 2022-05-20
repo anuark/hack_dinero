@@ -16,7 +16,9 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
 
     const [exposedEOA, setExposedEOA] = useState(0);
     const [frozenContract, setFrozenContract] = useState(0);
-    const [tokenType, setTokenType] = useState(true);
+
+     // FOR RADIO
+    const [tokenType, setTokenType] = useState(0);
 
     const updateExposedEOA = (e) => {
         setExposedEOA(e.target.value);
@@ -26,6 +28,7 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
         setFrozenContract(e.target.value);
     }
 
+    // FOR RADIO
     const updateType = (e) => {
         setTokenType(e.target.value)
     }
@@ -43,11 +46,11 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
     }
 
     async function rescueFunc(exposedEOA, signer, frozenContract, type) {
-        // TRUE radio
+        // 20 radio
         if(type === 20) {
             reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
         }
-        // FALSE radio
+        // 721 radio
         else if(type === 721) {
             reactrecoverERC721Funds(exposedEOA, signer, frozenContract)
         }
@@ -90,10 +93,28 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
                 <Row>
                     <Col>
                         <div class="form-outline">
-                            <label class="form-label" for="formControlSm">Type of asset<br/>
-                                <input type="radio" value="ERC20"  id="" class="" /> ERC20<br/>
-                                <input type="radio" value="ERC721"  id="" class="" /> ERC721
-                            </label>
+                            <p>Type of Token:</p>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    value="20"
+                                    checked={tokenType === 20}
+                                    onChange={updateType}
+                                /> ERC20
+                            </div>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    value="721"
+                                    checked={tokenType === 721}
+                                    onChange={updateType}
+                                /> ERC721
+                            </div>
+
+                            {/* <label class="form-label" for="formControlSm">Type of asset<br/>
+                                <input type="radio" value="20" checked={tokenType === 20} onChange={updateType} id="" class="" /> ERC20<br/>
+                                <input type="radio" value="721" checked={tokenType === 721} onChange={updateType} id="" class="" /> ERC721
+                            </label> */}
                         </div>
                     </Col>
                 </Row>
