@@ -1,4 +1,5 @@
 const ethers = require("ethers");
+require("dotenv").config();
 const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle");
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
@@ -13,7 +14,7 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
 // 2. secure EOA pk (from wallet)
 // 3. address of smart contract holding frozen assets
 
-export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, frozenContract) {
+export default async function reactrecoverERC20Funds(EXPOSED_PK, SECURE_PK, frozenContract) {
 
     const ERC20_ABI = [
         "function name() view returns (string)",
@@ -22,6 +23,9 @@ export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, froz
         "function balanceOf(address) view returns (uint)",
         "function transfer(address,uint256) external returns (bool)",
     ];
+
+    const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
+    const secureEOA = new ethers.Wallet(SECURE_PK, provider);
 
     const flashbotsProvider = await FlashbotsBundleProvider.create(
         provider,
