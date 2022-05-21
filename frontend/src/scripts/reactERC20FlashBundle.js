@@ -16,6 +16,7 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
   const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
   const secureADDR = SIGNER.getAddress();
 
+
   const flashbotsProvider = await FlashbotsBundleProvider.create(
     provider,
     exposedEOA,
@@ -27,27 +28,26 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
   const nonceSigner = await SIGNER.getTransactionCount();
   console.log(nonceSigner);
 
-  const fundTransaction = await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [{
-          nonce: nonceSigner,
-          to: exposedEOA.address,
-          from: secureADDR,
-          gasPrice,
-          gasLimit: 21000,
-          value: ethers.utils.parseEther(".1")
-      }],
-  });
+  // const fundTransaction = await window.ethereum.request({
+  //     method: 'eth_sendTransaction',
+  //     params: [{
+  //         to: exposedEOA.address,
+  //         from: secureADDR,
+  //         gasPrice,
+  //         gasLimit: 21000,
+  //         value: ethers.utils.parseEther(".1")
+  //     }],
+  // });
 
 
   // 1. fund exposed EOA from secure EOA
-  // const fundTransaction = await SIGNER.signTransaction({
-  //   nonce: await SIGNER.getTransactionCount(),
-  //   to: exposedEOA.address,
-  //   gasPrice,
-  //   gasLimit: 21000,
-  //   value: ethers.utils.parseEther('.1'),
-  // });
+  const fundTransaction = await SIGNER.signTransaction({
+    nonce: await SIGNER.getTransactionCount(),
+    to: exposedEOA.address,
+    gasPrice,
+    gasLimit: 21000,
+    value: ethers.utils.parseEther('.1'),
+  });
 
   // 2. Find out how many tokens
   const frozenAssets = new ethers.Contract(frozenContract, ERC20_ABI, exposedEOA);

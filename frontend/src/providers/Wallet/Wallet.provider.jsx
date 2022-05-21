@@ -29,7 +29,7 @@ const WalletProvider = ({ children }) => {
       const provider = new ethers.providers.Web3Provider(ethereum);
 
       setProvider(provider);
-      setSigner(provider.getSigner());
+      setSigner(provider.getSigner(0));
     } catch (error) {
       // TODO: handle connection errors
       console.error(error);

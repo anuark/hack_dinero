@@ -7,9 +7,12 @@ import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 
 const Rescue = () => {
   const { signer } = useWallet();
-  const [exposedEOA, setExposedEOA] = useState(0);
+  const [exposedEOA, setExposedEOA] = useState('');
   const [frozenContract, setFrozenContract] = useState(0);
-  const [tokenType, setTokenType] = useState(0); // FOR RADIO
+
+  console.log(`signer: ${{signer}}`)
+  console.log(signer)
+
 
   function updateExposedEOA(event) {
     setExposedEOA(event.target.value);
@@ -19,8 +22,7 @@ const Rescue = () => {
     setFrozenContract(e.target.value);
   };
 
-  async function rescueFunc(exposedEOA, frozenContract) {
-    console.log(signer);
+  async function rescueFunc() {
     if (document.getElementById('20').checked) {
       reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
     } else if (document.getElementById('721').checked) {
@@ -30,11 +32,6 @@ const Rescue = () => {
 
   function onSubmit() {
     console.log('on submit');
-  }
-
-  // FOR RADIO
-  function updateType(event) {
-    setTokenType(event.target.value);
   }
 
   return (
@@ -91,7 +88,7 @@ const Rescue = () => {
           <Row className="mt-5">
             <Col></Col>
             <Col>
-              <Button onClick={() => rescueFunc(exposedEOA, signer, frozenContract)}>Initiate Rescue</Button>
+              <Button onClick={rescueFunc}>Initiate Rescue</Button>
               {/* commented out `type=submit` */}
             </Col>
           </Row>
