@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useWallet } from '../../providers/Wallet/Wallet.provider';
 
 import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 
-const Rescue = ({ signer, setSigner, setProvider }) => {
+const Rescue = () => {
+  const { signer } = useWallet();
   const [exposedEOA, setExposedEOA] = useState(0);
   const [frozenContract, setFrozenContract] = useState(0);
   const [tokenType, setTokenType] = useState(0); // FOR RADIO
@@ -34,13 +36,6 @@ const Rescue = ({ signer, setSigner, setProvider }) => {
   function updateType(event) {
     setTokenType(event.target.value);
   }
-
-  useEffect(() => {
-
-    // if (window.ethereum) {
-    //   connectWallet(window.ethereum);
-    // }
-  }, [setProvider, setSigner]);
 
   return (
     <>

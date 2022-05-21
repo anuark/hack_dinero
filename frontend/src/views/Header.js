@@ -1,21 +1,11 @@
-/* global ethereum */
-
 import React from 'react';
-import { ethers } from 'ethers';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
-import { useResovedPath } from 'react-router-dom';
-// import Logo from '../assets/logo.png';
+
+import { useWallet } from '../providers/Wallet';
 import Logo from '../assets/baywatch_logo.png';
 
-const Header = (props) => {
-  const { signer, setProvider, setSigner } = props;
-  const connectWallet = async () => {
-    await ethereum.request({ method: 'eth_requestAccounts' });
-    const provider = new ethers.providers.Web3Provider(ethereum);
-
-    setProvider(provider);
-    setSigner(provider.getSigner());
-  }
+function Header() {
+  const { signer, connectWallet } = useWallet();
 
   return (
     <Navbar bg="dark" variant="light">
@@ -45,12 +35,16 @@ const Header = (props) => {
           </Nav.Link>
           {/* <Nav.Link href="/">Submit Proposal</Nav.Link> */}
         </Nav>
-        <Nav>
-          <Nav.Item className="text-white">{Object.keys(signer).length === 0 ? <Button onClick={connectWallet}>Connect Wallet</Button> : '⚡️ Wallet Connected'}</Nav.Item>
-        </Nav>
+        {window.ethereum ? (
+          <Nav>
+            <Nav.Item className="text-white">
+              {signer ? '⚡️ Wallet Connected' : <Button onClick={connectWallet}>Connect Wallet</Button>}
+            </Nav.Item>
+          </Nav>
+        ) : null}
       </Container>
     </Navbar>
   );
-};
+}
 
 export default Header;

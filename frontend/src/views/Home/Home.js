@@ -1,12 +1,12 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-import './Home.css';
 import video from '../../assets/baywatch.mp4';
+import './Home.css';
 
 const Home = () => {
   return (
-    <React.Fragment>
+    <>
       <div className="video-wrapper">
         <video playsInline autoPlay muted loop poster="polina.jpg" id="bgvid">
           <source src={video} type="video/mp4" />
@@ -63,7 +63,7 @@ const Home = () => {
           </Row>
         </Row>
       </Container>
-    </React.Fragment>
+    </>
   );
 };
 
