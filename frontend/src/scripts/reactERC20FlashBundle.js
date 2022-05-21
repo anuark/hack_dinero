@@ -1,19 +1,11 @@
 const ethers = require("ethers");
 const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle");
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
+const GOERLI_URL="https://goerli.infura.io/v3/558772964f064b53a401decdde1ad4ed"
+const provider = new ethers.providers.JsonRpcProvider(GOERLI_URL);
 
-// FROZEN_ASSETS address depending on deploy script
-// const FROZEN_ASSETS = "0x45Ac2eF3a0572F2B5ae36B0a11619ce82BEb3bDa";
-// const EXPOSED_EOA = new ethers.Wallet(process.env.EXPOSED_PK, provider);
-// const SECURE_EOA = new ethers.Wallet(process.env.SECURE_PK, provider);
 
-// parameters to receive from the front-end:
-// 1. exposed EOA pk
-// 2. secure EOA pk (from wallet)
-// 3. address of smart contract holding frozen assets
-
-export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, frozenContract) {
+export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
 
     const ERC20_ABI = [
         "function name() view returns (string)",
@@ -22,6 +14,9 @@ export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, froz
         "function balanceOf(address) view returns (uint)",
         "function transfer(address,uint256) external returns (bool)",
     ];
+
+    const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
+    const secureADDR = SIGNER.getAddress();
 
     const flashbotsProvider = await FlashbotsBundleProvider.create(
         provider,
@@ -33,8 +28,8 @@ export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, froz
     const gasPrice = ethers.utils.parseUnits("1", "gwei");
 
     // 1. fund exposed EOA from secure EOA
-    const fundTransaction = await secureEOA.signTransaction({
-        nonce: await secureEOA.getTransactionCount(),
+    const fundTransaction = await SIGNER.signTransaction({
+        nonce: await SIGNER.getTransactionCount(),
         to: exposedEOA.address,
         gasPrice,
         gasLimit: 21000,
@@ -47,9 +42,9 @@ export default async function reactrecoverERC20Funds(exposedEOA, secureEOA, froz
 
     // 3. from exposed EOA, make function call to frozen assets contract
     const nonce = await exposedEOA.getTransactionCount()
-    const withdrawTx = await frozenAssets.populateTransaction.transfer(secureEOA.address, balance, {
+    const withdrawTx = await frozenAssets.populateTransaction.transfer(secureADDR, balance, {
         nonce: nonce,
-        gasLimit:  await frozenAssets.estimateGas.transfer(secureEOA.address, balance),
+        gasLimit:  await frozenAssets.estimateGas.transfer(secureADDR, balance),
         gasPrice,
         value: 0
     })

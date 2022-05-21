@@ -17,6 +17,7 @@ function App() {
             <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/rescue" element={<Rescue signer={signer} setSigner={setSigner} addr={addr} setAddr={setAddr} provider={provider} setProvider={setProvider} />} />
                 <Route path="/success" element={<Success />} />
             </Routes>
