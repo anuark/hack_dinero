@@ -1,11 +1,11 @@
 const ethers = require("ethers");
 const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle");
 
-const GOERLI_URL="https://goerli.infura.io/v3/558772964f064b53a401decdde1ad4ed"
-const provider = new ethers.providers.JsonRpcProvider(GOERLI_URL);
-
 
 export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
+
+    const GOERLI_URL="https://goerli.infura.io/v3/558772964f064b53a401decdde1ad4ed"
+    const provider = new ethers.providers.JsonRpcProvider(GOERLI_URL);
 
     const ERC20_ABI = [
         "function name() view returns (string)",

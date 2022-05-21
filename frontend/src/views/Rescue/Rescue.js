@@ -5,7 +5,7 @@ import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 const { ethereum } = window;
 
-const Rescue = () => {
+const Rescue = (props) => {
 
     const [exposedEOA, setExposedEOA] = useState(0);
     const [frozenContract, setFrozenContract] = useState(0);
