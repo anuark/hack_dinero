@@ -19,37 +19,37 @@ describe("FrozenERC721", function () {
     console.log(`
     exposed  eoa: ${exposedEOA.address}
     secured  eoa: ${secureEOA.address}
-    nft contract: ${frozenNfts.address}`)
+    nft contract: ${frozenNfts.address}`);
 
     // mint NFTs
-    for (let i=0; i<3; i++) {
-      frozenNfts.mint()
+    for (let i = 0; i < 3; i++) {
+      frozenNfts.mint();
     }
   });
 
   it("check for balance of NFTs in exposedEOA", async function () {
     balance = await parseInt(await frozenNfts.balanceOf(exposedEOA.address), 16);
-    expect(balance > 0)
+    expect(balance > 0);
   });
 
   it("filter tokenIDs of NFTs for exposedEOA", async function () {
     let i = 0;
-    while(ownedTokens.length < balance) {
-      if(await frozenNfts.ownerOf(i) == exposedEOA.address) {
+    while (ownedTokens.length < balance) {
+      if ((await frozenNfts.ownerOf(i)) == exposedEOA.address) {
         ownedTokens.push(i);
-      } 
+      }
       i++;
     }
     console.log(`token IDs: ${ownedTokens}`);
-    expect(ownedTokens.length == balance)
+    expect(ownedTokens.length == balance);
   });
 
   it("transfer all NFTs from exposedEOA to secureEOA", async function () {
-    for(let i=0; i<balance; i++) {
+    for (let i = 0; i < balance; i++) {
       await frozenNfts.transferFrom(exposedEOA.address, secureEOA.address, ownedTokens[i], {
         gasPrice,
-        value: 0
-      })
+        value: 0,
+      });
     }
   });
 });

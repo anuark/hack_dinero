@@ -1,39 +1,39 @@
 video {
-    object-fit: cover;
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    top: 0;
-    left: 0;
-    z-index:-9;
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: -9;
 }
 
 #mask {
-    z-index: 1;
-    position: absolute;
-    top: 0;
-    background-color: #000;
-    opacity: 0.7;
-    width: 100vw;
-    height: 100vh;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  background-color: #000;
+  opacity: 0.7;
+  width: 100vw;
+  height: 100vh;
 }
 
 .video-wrapper {
-    position: relative;
+  position: relative;
 }
 
 #btn-action {
-    position: absolute;
-    top: 50vh;
-    left: 50vw;
-    z-index: 1;
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+  z-index: 1;
 }
 
 .section {
-    height: 50vh;
-    color: white;
+  height: 50vh;
+  color: white;
 }
 
 body {
-    position: relative;
+  position: relative;
 }
