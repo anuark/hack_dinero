@@ -16,6 +16,10 @@ const Rescue = () => {
   const [frozenContract, setFrozenContract] = useState(0);
   const [contractType, setContractType] = useState(null);
 
+  if (!signer) {
+    // TODO: review auto-connecting to wallet
+  }
+
   function updateExposedEOA(event) {
     setExposedEOA(event.target.value);
   }
