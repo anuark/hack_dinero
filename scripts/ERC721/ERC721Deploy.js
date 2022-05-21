@@ -1,3 +1,5 @@
+const { ethers } = require('hardhat');
+
 async function main() {
   const ERC721Contract = await ethers.getContractFactory('FrozenERC721');
   const erc721Contract = await ERC721Contract.deploy('FrozenNFT', 'FZNF', { value: ethers.utils.parseEther('.02') });
