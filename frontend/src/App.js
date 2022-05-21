@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import React, { useState } from 'react';
-
 import Home from './views/Home/Home.js';
 import Rescue from './views/Rescue/Rescue.js';
 import Success from './views/Success/Success.js';
@@ -15,7 +14,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header signer={signer} />
+      <Header signer={signer} setSigner={setSigner} setProvider={setProvider} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />

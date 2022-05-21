@@ -1,9 +1,22 @@
-import React from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+/* global ethereum */
 
+import React from 'react';
+import { ethers } from 'ethers';
+import { Navbar, Nav, Button, Container } from 'react-bootstrap';
+import { useResovedPath } from 'react-router-dom';
+// import Logo from '../assets/logo.png';
 import Logo from '../assets/baywatch_logo.png';
 
-const Header = ({ signer }) => {
+const Header = (props) => {
+  const { signer, setProvider, setSigner } = props;
+  const connectWallet = async () => {
+    await ethereum.request({ method: 'eth_requestAccounts' });
+    const provider = new ethers.providers.Web3Provider(ethereum);
+
+    setProvider(provider);
+    setSigner(provider.getSigner());
+  }
+
   return (
     <Navbar bg="dark" variant="light">
       <Container>
@@ -33,7 +46,7 @@ const Header = ({ signer }) => {
           {/* <Nav.Link href="/">Submit Proposal</Nav.Link> */}
         </Nav>
         <Nav>
-          <Nav.Item className="text-white">{signer != null ? '⚡️ Wallet Connected' : 'No wallet connected'}</Nav.Item>
+          <Nav.Item className="text-white">{Object.keys(signer).length === 0 ? <Button onClick={connectWallet}>Connect Wallet</Button> : '⚡️ Wallet Connected'}</Nav.Item>
         </Nav>
       </Container>
     </Navbar>

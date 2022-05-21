@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { ethers } from 'ethers';
 
 import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
@@ -37,21 +36,10 @@ const Rescue = ({ signer, setSigner, setProvider }) => {
   }
 
   useEffect(() => {
-    async function connectWallet(ethereum) {
-      await ethereum.request({ method: 'eth_requestAccounts' });
 
-      const provider = new ethers.providers.Web3Provider(ethereum);
-
-      setProvider(provider);
-      setSigner(provider.getSigner());
-
-      // const address = await signer.getAddress();
-      // setAddr(address);
-    }
-
-    if (window.ethereum) {
-      connectWallet(window.ethereum);
-    }
+    // if (window.ethereum) {
+    //   connectWallet(window.ethereum);
+    // }
   }, [setProvider, setSigner]);
 
   return (
