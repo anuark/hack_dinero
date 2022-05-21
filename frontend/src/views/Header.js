@@ -8,6 +8,13 @@ const Header = () => {
     return (
         <Navbar bg="dark" variant="light">
             <Container>
+                <Navbar.Brand href="/home" className="ms-5">
+                    <img
+                        alt="logo"
+                        src={Logo}
+                        width="166"
+                        className="d-inline-block align-top" />
+                </Navbar.Brand>
                 {/*<Navbar.Brand href="/">
           <img
             alt=""
@@ -23,13 +30,6 @@ const Header = () => {
                     <Nav.Link className="text-white" href="#how">How we do it</Nav.Link>
                     <Nav.Link className="text-white" href="#who">Who is it for</Nav.Link>
                     {/* <Nav.Link href="/">Submit Proposal</Nav.Link> */}
-                    <Navbar.Brand href="/home" className="ms-5">
-                        <img
-                            alt="logo"
-                            src={Logo}
-                            width="166"
-                            className="d-inline-block align-top" />
-                    </Navbar.Brand>
                 </Nav>
             </Container>
         </Navbar>
