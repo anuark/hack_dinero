@@ -6,15 +6,21 @@ import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 const { ethereum } = window;
 
 
-const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
+// const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
     // useEffect(() => {
     //     document.getElementById('rescue-form').addEventListener('onsubmit', () => {
     //         // onsubmit
     //     });
     // });
 
+const Rescue = ( ) => {
+
     const [exposedEOA, setExposedEOA] = useState(0);
     const [frozenContract, setFrozenContract] = useState(0);
+
+    const [signer, setSigner] = useState({});
+    const [provider, setProvider] = useState({});
+
 
      // FOR RADIO
     const [tokenType, setTokenType] = useState(0);
@@ -39,17 +45,23 @@ const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
             setProvider(provider);
             const Signer = await provider.getSigner();
             setSigner(Signer);
-            const address = await signer.getAddress();
-            setAddr(address);
+            // const address = await signer.getAddress();
+            // setAddr(address);
         }
     }
 
     async function rescueFunc(exposedEOA, frozenContract) {
+        await ethereum.request({method: 'eth_requestAccounts'});
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        setProvider(provider);
+        const Signer = await provider.getSigner();
+        setSigner(Signer);
+
         if(document.getElementById('20').checked) {
-            reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
+            reactrecoverERC20Funds(exposedEOA, Signer, frozenContract);
         }
         else if(document.getElementById('721').checked) {
-            reactrecoverERC721Funds(exposedEOA, signer, frozenContract);
+            reactrecoverERC721Funds(exposedEOA, Signer, frozenContract);
         }
     }
     const onSubmit = () => {
