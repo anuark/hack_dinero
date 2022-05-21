@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import React from 'react';
 
 import WalletProvider from './providers/Wallet';
-// import PrivateRoute from './components/PrivateRoute';
 import Home from './views/Home/Home.js';
 import Rescue from './views/Rescue/Rescue.js';
 import Success from './views/Success/Success.js';

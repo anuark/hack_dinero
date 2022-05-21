@@ -4,7 +4,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import video from '../../assets/baywatch.mp4';
 import './Home.css';
 
-const Home = () => {
+function Home() {
   return (
     <>
       <div className="video-wrapper">
@@ -16,6 +16,7 @@ const Home = () => {
           Rescue your assets
         </Button>
       </div>
+
       <Container>
         <Row className="m-5 section" id="what">
           <Row>
@@ -65,6 +66,6 @@ const Home = () => {
       </Container>
     </>
   );
-};
+}
 
 export default Home;

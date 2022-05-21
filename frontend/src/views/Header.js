@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 
+import MetamaskIcon from '../components/MetamaskIcon';
 import { useWallet } from '../providers/Wallet';
 import Logo from '../assets/baywatch_logo.png';
 
@@ -50,7 +51,13 @@ function Header() {
         )}
         <Nav>
           <Nav.Item className="text-white">
-            {signer ? '⚡️ Wallet Connected' : <Button onClick={connectWallet}>Connect Wallet</Button>}
+            {signer ? (
+              '⚡️ Wallet Connected'
+            ) : (
+              <Button onClick={connectWallet}>
+                <MetamaskIcon size="1.5rem" /> Connect Wallet
+              </Button>
+            )}
           </Nav.Item>
         </Nav>
       </Container>
