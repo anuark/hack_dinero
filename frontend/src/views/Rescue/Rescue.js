@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useWallet } from '../../providers/Wallet/Wallet.provider';
 
+import { useWallet } from '../../providers/Wallet';
 import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 
