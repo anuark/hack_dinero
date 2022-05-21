@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "/docs/routing/redirections"
-  to = "/docs/routing/redirects"
+  from = "/build/index.html"
+  to = "/build/index.html"
   status = 301
   force = true
