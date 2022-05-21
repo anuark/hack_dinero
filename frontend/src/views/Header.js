@@ -1,8 +1,8 @@
-import React from "react";
-import { Navbar, Nav, Form, FormControl, Button, Container } from "react-bootstrap";
-import { useResovedPath } from "react-router-dom";
+import React from 'react';
+import { Navbar, Nav, Form, FormControl, Button, Container } from 'react-bootstrap';
+import { useResovedPath } from 'react-router-dom';
 // import Logo from '../assets/logo.png';
-import Logo from "../assets/baywatch_logo.png";
+import Logo from '../assets/baywatch_logo.png';
 
 const Header = (props) => {
   const { signer } = props;
@@ -36,7 +36,7 @@ const Header = (props) => {
           {/* <Nav.Link href="/">Submit Proposal</Nav.Link> */}
         </Nav>
         <Nav>
-          <Nav.Item className="text-white">{signer != null ? "⚡️ Wallet Connected" : "No wallet connected"}</Nav.Item>
+          <Nav.Item className="text-white">{signer != null ? '⚡️ Wallet Connected' : 'No wallet connected'}</Nav.Item>
         </Nav>
       </Container>
     </Navbar>

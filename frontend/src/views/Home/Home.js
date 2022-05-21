@@ -1,7 +1,7 @@
-import React from "react";
-import "./Home.css";
-import video from "../../assets/baywatch.mp4";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import React from 'react';
+import './Home.css';
+import video from '../../assets/baywatch.mp4';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 const Home = () => {
   return (

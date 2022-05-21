@@ -1,7 +1,7 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
-describe("FrozenERC20", function () {
+describe('FrozenERC20', function () {
   let FrozenERC20;
   let owner;
   let secure1;
@@ -20,13 +20,13 @@ describe("FrozenERC20", function () {
   before(async function () {
     [owner, secure1, exposed1, secure2, exposed2] = await ethers.getSigners();
 
-    FrozenERC20 = await ethers.getContractFactory("FrozenERC20");
+    FrozenERC20 = await ethers.getContractFactory('FrozenERC20');
     FrozenERC20Contract = await FrozenERC20.deploy();
     await FrozenERC20Contract.deployed();
   });
 
-  describe("The contract", function () {
-    it("Should deploy with total supply in owners address", async function () {
+  describe('The contract', function () {
+    it('Should deploy with total supply in owners address', async function () {
       const ownerBalance = humanReadable(await FrozenERC20Contract.balanceOf(owner.address));
       expect(ownerBalance).to.equal(100);
     });
@@ -36,7 +36,7 @@ describe("FrozenERC20", function () {
       await FrozenERC20Contract.connect(owner).transfer(exposed1.address, EVMReadable(10));
       await FrozenERC20Contract.connect(owner).transfer(exposed2.address, EVMReadable(10));
     });
-    it("Should decrease tokens inside of owners address", async function () {
+    it('Should decrease tokens inside of owners address', async function () {
       const ownerBalance = humanReadable(await FrozenERC20Contract.balanceOf(owner.address));
       expect(ownerBalance).to.equal(80);
     });

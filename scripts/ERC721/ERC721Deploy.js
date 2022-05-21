@@ -1,9 +1,9 @@
 async function main() {
-  const ERC721Contract = await ethers.getContractFactory("FrozenERC721");
-  const erc721Contract = await ERC721Contract.deploy("FrozenNFT", "FZNF", { value: ethers.utils.parseEther(".02") });
+  const ERC721Contract = await ethers.getContractFactory('FrozenERC721');
+  const erc721Contract = await ERC721Contract.deploy('FrozenNFT', 'FZNF', { value: ethers.utils.parseEther('.02') });
   await erc721Contract.deployed();
 
-  console.log("Asset frozen at:", erc721Contract.address);
+  console.log('Asset frozen at:', erc721Contract.address);
 }
 
 main();

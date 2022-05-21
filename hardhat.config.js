@@ -1,12 +1,12 @@
-require("@nomiclabs/hardhat-etherscan");
-require("@openzeppelin/hardhat-upgrades");
-require("dotenv").config();
-require("@nomiclabs/hardhat-ethers");
-require("@nomiclabs/hardhat-waffle");
-require("hardhat-gas-reporter");
+require('@nomiclabs/hardhat-etherscan');
+require('@openzeppelin/hardhat-upgrades');
+require('dotenv').config();
+require('@nomiclabs/hardhat-ethers');
+require('@nomiclabs/hardhat-waffle');
+require('hardhat-gas-reporter');
 
 module.exports = {
-  solidity: "0.8.4",
+  solidity: '0.8.4',
   networks: {
     goerli: {
       url: process.env.GOERLI_URL,

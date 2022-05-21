@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
-import { ethers } from "ethers";
-import reactrecoverERC20Funds from "../../scripts/reactERC20FlashBundle";
-import reactrecoverERC721Funds from "../../scripts/reactERC721FlashBundle";
+import React, { useEffect, useState } from 'react';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { ethers } from 'ethers';
+import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
+import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 const { ethereum } = window;
 
 const Rescue = (props) => {
@@ -23,7 +23,7 @@ const Rescue = (props) => {
 
   async function connectWalletHandler() {
     if (ethereum) {
-      await ethereum.request({ method: "eth_requestAccounts" });
+      await ethereum.request({ method: 'eth_requestAccounts' });
       const provider = new ethers.providers.Web3Provider(ethereum);
       setProvider(provider);
       setSigner(provider.getSigner());
@@ -34,15 +34,15 @@ const Rescue = (props) => {
 
   async function rescueFunc(exposedEOA, frozenContract) {
     console.log(signer);
-    if (document.getElementById("20").checked) {
+    if (document.getElementById('20').checked) {
       reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
-    } else if (document.getElementById("721").checked) {
+    } else if (document.getElementById('721').checked) {
       reactrecoverERC721Funds(exposedEOA, signer, frozenContract);
     }
   }
 
   const onSubmit = () => {
-    console.log("on submit");
+    console.log('on submit');
   };
 
   // FOR RADIO

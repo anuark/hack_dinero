@@ -1,14 +1,14 @@
-import { Routes, Route } from "react-router-dom";
-import "./App.css";
-import Home from "./views/Home/Home.js";
-import Rescue from "./views/Rescue/Rescue.js";
-import Success from "./views/Success/Success.js";
-import Header from "./views/Header.js";
-import Footer from "./views/Footer.js";
-import React, { useState } from "react";
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import Home from './views/Home/Home.js';
+import Rescue from './views/Rescue/Rescue.js';
+import Success from './views/Success/Success.js';
+import Header from './views/Header.js';
+import Footer from './views/Footer.js';
+import React, { useState } from 'react';
 
 function App() {
-  const [provider, setProvider] = useState("");
+  const [provider, setProvider] = useState('');
   const [addr, setAddr] = useState(0);
   const [signer, setSigner] = useState({});
 
