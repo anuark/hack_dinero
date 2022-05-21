@@ -1,36 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { ethers } from 'ethers';
+
 import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
-const { ethereum } = window;
 
-const Rescue = (props) => {
-  const { signer, setSigner, setProvider } = props;
+const Rescue = ({ signer, setSigner, setProvider }) => {
   const [exposedEOA, setExposedEOA] = useState(0);
   const [frozenContract, setFrozenContract] = useState(0);
+  const [tokenType, setTokenType] = useState(0); // FOR RADIO
 
-  // FOR RADIO
-  const [tokenType, setTokenType] = useState(0);
-
-  const updateExposedEOA = (e) => {
-    setExposedEOA(e.target.value);
-  };
+  function updateExposedEOA(event) {
+    setExposedEOA(event.target.value);
+  }
 
   const updatedFrozenContract = (e) => {
     setFrozenContract(e.target.value);
   };
-
-  async function connectWalletHandler() {
-    if (ethereum) {
-      await ethereum.request({ method: 'eth_requestAccounts' });
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      setProvider(provider);
-      setSigner(provider.getSigner());
-      // const address = await signer.getAddress();
-      // setAddr(address);
-    }
-  }
 
   async function rescueFunc(exposedEOA, frozenContract) {
     console.log(signer);
@@ -41,21 +27,35 @@ const Rescue = (props) => {
     }
   }
 
-  const onSubmit = () => {
+  function onSubmit() {
     console.log('on submit');
-  };
+  }
 
   // FOR RADIO
-  const updateType = (e) => {
-    setTokenType(e.target.value);
-  };
+  function updateType(event) {
+    setTokenType(event.target.value);
+  }
 
   useEffect(() => {
-    connectWalletHandler();
-  }, []);
+    async function connectWallet(ethereum) {
+      await ethereum.request({ method: 'eth_requestAccounts' });
+
+      const provider = new ethers.providers.Web3Provider(ethereum);
+
+      setProvider(provider);
+      setSigner(provider.getSigner());
+
+      // const address = await signer.getAddress();
+      // setAddr(address);
+    }
+
+    if (window.ethereum) {
+      connectWallet(window.ethereum);
+    }
+  }, [setProvider, setSigner]);
 
   return (
-    <React.Fragment>
+    <>
       <Container className="text-white">
         <form id="rescue-form" onSubmit={onSubmit}>
           <Row>
@@ -114,7 +114,7 @@ const Rescue = (props) => {
           </Row>
         </form>
       </Container>
-    </React.Fragment>
+    </>
   );
 };
 
