@@ -52,7 +52,9 @@ const Rescue = (props) => {
         setTokenType(e.target.value)
     }
 
-    console.log(signer, 'signer');
+    useEffect(() => {
+        connectWalletHandler();
+    }, []);
 
     return (
         <React.Fragment>
