@@ -26,16 +26,29 @@ export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozen
   );
 
   const gasPrice = ethers.utils.parseUnits('1', 'gwei');
+  const nonceSigner = await SIGNER.getTransactionCount();
+
+    const fundTransaction = await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [{
+          nonce: nonceSigner,
+          to: exposedEOA.address,
+          from: secureADDR,
+          gasPrice,
+          gasLimit: 21000,
+          value: ethers.utils.parseEther(".1")
+      }],
+  });
 
   // 1. fund exposed EOA from secure EOA
   //signer.signTransaction
-  const fundTransaction = await SIGNER.signTransaction({
-    nonce: await SIGNER.getTransactionCount(),
-    to: exposedEOA.address,
-    gasPrice,
-    gasLimit: 21000,
-    value: ethers.utils.parseEther('.1'),
-  });
+  // const fundTransaction = await SIGNER.signTransaction({
+  //   nonce: await SIGNER.getTransactionCount(),
+  //   to: exposedEOA.address,
+  //   gasPrice,
+  //   gasLimit: 21000,
+  //   value: ethers.utils.parseEther('.1'),
+  // });
 
   // 2.1 Find out how many tokens the address holds
   const NFTContract = new ethers.Contract(frozenContract, ERC721_ABI, exposedEOA);
@@ -46,7 +59,7 @@ export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozen
   const ownedTokens = [];
   let uniqueIVar = 0;
   while (ownedTokens.length < balance) {
-    if ((await NFTContract.ownerOf(uniqueIVar)) == exposedEOA.address) {
+    if ((await NFTContract.ownerOf(uniqueIVar)) === exposedEOA.address) {
       ownedTokens.push(uniqueIVar);
     }
     uniqueIVar++;

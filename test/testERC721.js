@@ -35,13 +35,13 @@ describe('FrozenERC721', function () {
   it('filter tokenIDs of NFTs for exposedEOA', async function () {
     let i = 0;
     while (ownedTokens.length < balance) {
-      if ((await frozenNfts.ownerOf(i)) == exposedEOA.address) {
+      if ((await frozenNfts.ownerOf(i)) === exposedEOA.address) {
         ownedTokens.push(i);
       }
       i++;
     }
     console.log(`token IDs: ${ownedTokens}`);
-    expect(ownedTokens.length == balance);
+    expect(ownedTokens.length === balance);
   });
 
   it('transfer all NFTs from exposedEOA to secureEOA', async function () {

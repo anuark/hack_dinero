@@ -1,3 +1,5 @@
+const { ethers } = require('hardhat');
+
 async function main() {
   const ERC20Contract = await ethers.getContractFactory('FrozenERC20');
   const erc20Contract = await ERC20Contract.deploy({ value: ethers.utils.parseEther('.02') });
