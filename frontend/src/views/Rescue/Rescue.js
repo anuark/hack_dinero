@@ -5,12 +5,11 @@ import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 const { ethereum } = window;
 
-const Rescue = (props) => {
 
+const Rescue = (props) => {
+    const { signer, setSigner, setProvider } = props;
     const [exposedEOA, setExposedEOA] = useState(0);
     const [frozenContract, setFrozenContract] = useState(0);
-    const [signer, setSigner] = useState({});
-    const [provider, setProvider] = useState({});
 
      // FOR RADIO
     const [tokenType, setTokenType] = useState(0);
@@ -26,8 +25,11 @@ const Rescue = (props) => {
     async function connectWalletHandler() {
         if (ethereum) {
             await ethereum.request({method: 'eth_requestAccounts'});
-            setProvider(new ethers.providers.Web3Provider(ethereum));
-            setSigner(await provider.getSigner());
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            setProvider(provider);
+            setSigner(provider.getSigner());
+            // const address = await signer.getAddress();
+            // setAddr(address);
         }
     }
 
@@ -50,31 +52,33 @@ const Rescue = (props) => {
         setTokenType(e.target.value)
     }
 
+    console.log(signer, 'signer');
+
     return (
         <React.Fragment>
             <Container className="text-white">
                 <form id="rescue-form" onSubmit={onSubmit}>
                 <Row>
                     <Col>
-                        <div class="form-outline">
-                            <label class="form-label" for="formControlLg">Exposed Private Key</label>
-                            <input type="text" id="formControlLg" class="form-control form-control-lg" onChange={updateExposedEOA} /><br/>
+                        <div className="form-outline">
+                            <label className="form-label" htmlFor="formControlLg">Exposed Private Key</label>
+                            <input type="text" id="formControlLg" className="form-control form-control-lg" onChange={updateExposedEOA} /><br/>
                         </div>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <div class="form-outline">
-                            <label class="form-label" for="formControlSm">Frozen address</label>
-                            <input type="text" id="formControlSm" class="form-control form-control-sm" onChange={updatedFrozenContract}/><br/>
+                        <div className="form-outline">
+                            <label className="form-label" htmlFor="formControlSm">Frozen address</label>
+                            <input type="text" id="formControlSm" className="form-control form-control-sm" onChange={updatedFrozenContract}/><br/>
                         </div>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <div class="form-outline">
+                        <div className="form-outline">
                             <p>Type of Token:</p>
                             <div>
                                 <input name="selector" type="radio" value="20" id="20"/> ERC20

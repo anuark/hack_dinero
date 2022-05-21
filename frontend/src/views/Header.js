@@ -1,10 +1,12 @@
 import React from 'react';
 import { Navbar, Nav, Form, FormControl, Button, Container } from 'react-bootstrap';
-// import { Link } from 'react-router-dom';
+import { useResovedPath } from 'react-router-dom';
 // import Logo from '../assets/logo.png';
 import Logo from '../assets/baywatch_logo.png';
 
 const Header = () => {
+    
+
     return (
         <Navbar bg="dark" variant="light">
             <Container>
