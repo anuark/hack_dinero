@@ -14,7 +14,7 @@ function useWallet() {
 const WalletProvider = ({ children }) => {
   const [signer, setSigner] = useState(null);
   const [provider, setProvider] = useState(null);
-  // const [addr, setAddr] = useState(0);
+  const [recoveredFunds, setRecoveredFunds] = useState(null);
 
   async function connectWallet() {
     const { ethereum } = window;
@@ -36,7 +36,10 @@ const WalletProvider = ({ children }) => {
     }
   }
 
-  const contextValue = useMemo(() => ({ connectWallet, signer, provider }), [provider, signer]);
+  const contextValue = useMemo(
+    () => ({ connectWallet, signer, provider, recoveredFunds, setRecoveredFunds }),
+    [provider, recoveredFunds, signer]
+  );
 
   return <WalletContext.Provider value={contextValue}>{children}</WalletContext.Provider>;
 };

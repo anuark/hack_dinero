@@ -2,37 +2,48 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
 import { useWallet } from '../../providers/Wallet';
-import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
-import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
+import recoverERC20Funds from '../../scripts/reactERC20FlashBundle';
+import recoverERC721Funds from '../../scripts/reactERC721FlashBundle';
+
+const CONTRACTS = {
+  ERC20: 'ERC20',
+  ERC721: 'ERC721',
+};
 
 const Rescue = () => {
-  const { signer } = useWallet();
+  const { signer, setRecoveredFunds } = useWallet();
   const [exposedEOA, setExposedEOA] = useState('');
   const [frozenContract, setFrozenContract] = useState(0);
-
-  console.log(`signer: ${{signer}}`)
-  console.log(signer)
-
+  const [contractType, setContractType] = useState(null);
 
   function updateExposedEOA(event) {
     setExposedEOA(event.target.value);
   }
 
-  const updatedFrozenContract = (e) => {
-    setFrozenContract(e.target.value);
-  };
+  function updatedFrozenContract(event) {
+    setFrozenContract(event.target.value);
+  }
 
-  async function rescueFunc() {
-    if (document.getElementById('20').checked) {
-      reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
-    } else if (document.getElementById('721').checked) {
-      reactrecoverERC721Funds(exposedEOA, signer, frozenContract);
+  function updateContractType(event) {
+    setContractType(event.target.value);
+  }
+
+  async function rescueFunds() {
+    const recoverFn = contractType === CONTRACTS.ERC20 ? recoverERC20Funds : recoverERC721Funds;
+    try {
+      const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract);
+      setRecoveredFunds(recoveredFunds);
+    } catch (error) {
+      // TODO: add error handling
+      console.error(`Error recovering funds: ${error}`);
     }
   }
 
   function onSubmit() {
     console.log('on submit');
   }
+
+  const formInvalid = exposedEOA === '' || frozenContract === '' || contractType === null;
 
   return (
     <>
@@ -66,6 +77,7 @@ const Rescue = () => {
                   id="formControlSm"
                   className="form-control form-control-sm"
                   onChange={updatedFrozenContract}
+                  // TODO: add pattern validation
                 />
                 <br />
               </div>
@@ -77,10 +89,28 @@ const Rescue = () => {
               <div className="form-outline">
                 <p>Type of Token:</p>
                 <div>
-                  <input name="selector" type="radio" value="20" id="20" /> ERC20
+                  <label htmlFor={CONTRACTS.ERC20}>
+                    <input
+                      type="radio"
+                      id={CONTRACTS.ERC20}
+                      value={CONTRACTS.ERC20}
+                      checked={contractType === CONTRACTS.ERC20}
+                      onClick={updateContractType}
+                    />
+                    {CONTRACTS.ERC20}
+                  </label>
                 </div>
                 <div>
-                  <input name="selector" type="radio" value="721" id="721" /> ERC721
+                  <label htmlFor={CONTRACTS.ERC721}>
+                    <input
+                      type="radio"
+                      id={CONTRACTS.ERC721}
+                      value={CONTRACTS.ERC721}
+                      checked={contractType === CONTRACTS.ERC721}
+                      onClick={updateContractType}
+                    />
+                    {CONTRACTS.ERC721}
+                  </label>
                 </div>
               </div>
             </Col>
@@ -88,8 +118,9 @@ const Rescue = () => {
           <Row className="mt-5">
             <Col></Col>
             <Col>
-              <Button onClick={rescueFunc}>Initiate Rescue</Button>
-              {/* commented out `type=submit` */}
+              <Button disabled={formInvalid} onClick={rescueFunds}>
+                Initiate Rescue
+              </Button>
             </Col>
           </Row>
         </form>

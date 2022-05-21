@@ -1,7 +1,21 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 
+import { useWallet } from '../../providers/Wallet';
+
 const Success = () => {
+  const { signer, recoveredFunds } = useWallet();
+
+  if (!signer) {
+    // TODO: review auto-connecting to wallet
+  }
+
+  if (!recoveredFunds) {
+    // TODO: review this approach
+    return <Navigate to="/" />;
+  }
+
   return (
     <div>
       <Container>

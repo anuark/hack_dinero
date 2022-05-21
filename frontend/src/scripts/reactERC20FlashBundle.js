@@ -16,7 +16,6 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
   const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
   const secureADDR = SIGNER.getAddress();
 
-
   const flashbotsProvider = await FlashbotsBundleProvider.create(
     provider,
     exposedEOA,
@@ -38,7 +37,6 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
   //         value: ethers.utils.parseEther(".1")
   //     }],
   // });
-
 
   // 1. fund exposed EOA from secure EOA
   const fundTransaction = await SIGNER.signTransaction({
@@ -92,6 +90,9 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
       process.exit();
     }
   });
+
+  // TODO: replace with payload from flashbots provider
+  return {};
 }
 
 // reactrecoverERC20Funds(EXPOSED_EOA, SECURE_EOA, FROZEN_ASSETS, ERC20_ABI);

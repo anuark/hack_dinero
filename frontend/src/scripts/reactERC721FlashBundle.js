@@ -28,16 +28,18 @@ export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozen
   const gasPrice = ethers.utils.parseUnits('1', 'gwei');
   const nonceSigner = await SIGNER.getTransactionCount();
 
-    const fundTransaction = await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [{
-          nonce: nonceSigner,
-          to: exposedEOA.address,
-          from: secureADDR,
-          gasPrice,
-          gasLimit: 21000,
-          value: ethers.utils.parseEther(".1")
-      }],
+  const fundTransaction = await window.ethereum.request({
+    method: 'eth_sendTransaction',
+    params: [
+      {
+        nonce: nonceSigner,
+        to: exposedEOA.address,
+        from: secureADDR,
+        gasPrice,
+        gasLimit: 21000,
+        value: ethers.utils.parseEther('.1'),
+      },
+    ],
   });
 
   // 1. fund exposed EOA from secure EOA
@@ -114,6 +116,9 @@ export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozen
       process.exit();
     }
   });
+
+  // TODO: replace with payload from flashbots provider
+  return {};
 }
 
 // reactrecoverERC721Funds(EXPOSED_EOA, SECURE_EOA, FROZEN_ASSETS, ERC721_ABI);
