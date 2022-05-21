@@ -5,22 +5,12 @@ import reactrecoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import reactrecoverERC721Funds from '../../scripts/reactERC721FlashBundle';
 const { ethereum } = window;
 
-
-// const Rescue = ( signer, setSigner, provider, setProvider, addr, setAddr ) => {
-    // useEffect(() => {
-    //     document.getElementById('rescue-form').addEventListener('onsubmit', () => {
-    //         // onsubmit
-    //     });
-    // });
-
-const Rescue = ( ) => {
+const Rescue = () => {
 
     const [exposedEOA, setExposedEOA] = useState(0);
     const [frozenContract, setFrozenContract] = useState(0);
-
     const [signer, setSigner] = useState({});
     const [provider, setProvider] = useState({});
-
 
      // FOR RADIO
     const [tokenType, setTokenType] = useState(0);
@@ -33,40 +23,32 @@ const Rescue = ( ) => {
         setFrozenContract(e.target.value);
     }
 
-    // FOR RADIO
-    const updateType = (e) => {
-        setTokenType(e.target.value)
-    }
-
     async function connectWalletHandler() {
         if (ethereum) {
             await ethereum.request({method: 'eth_requestAccounts'});
-            const provider = new ethers.providers.Web3Provider(ethereum);
-            setProvider(provider);
-            const Signer = await provider.getSigner();
-            setSigner(Signer);
-            // const address = await signer.getAddress();
-            // setAddr(address);
+            setProvider(new ethers.providers.Web3Provider(ethereum));
+            setSigner(await provider.getSigner());
         }
     }
 
     async function rescueFunc(exposedEOA, frozenContract) {
-        await ethereum.request({method: 'eth_requestAccounts'});
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        setProvider(provider);
-        const Signer = await provider.getSigner();
-        setSigner(Signer);
-
+        console.log(signer)
         if(document.getElementById('20').checked) {
-            reactrecoverERC20Funds(exposedEOA, Signer, frozenContract);
+            reactrecoverERC20Funds(exposedEOA, signer, frozenContract);
         }
         else if(document.getElementById('721').checked) {
-            reactrecoverERC721Funds(exposedEOA, Signer, frozenContract);
+            reactrecoverERC721Funds(exposedEOA, signer, frozenContract);
         }
     }
+
     const onSubmit = () => {
         console.log('on submit');
     };
+
+    // FOR RADIO
+    const updateType = (e) => {
+        setTokenType(e.target.value)
+    }
 
     return (
         <React.Fragment>
