@@ -1,8 +1,8 @@
 const ethers = require("ethers");
-require("dotenv").config();
 const { FlashbotsBundleProvider } = require("@flashbots/ethers-provider-bundle");
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
+const GOERLI_URL=""
+const provider = new ethers.providers.JsonRpcProvider(GOERLI_URL);
 
 
 export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozenContract) {
