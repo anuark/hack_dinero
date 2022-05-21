@@ -14,7 +14,7 @@ function App() {
 
     return (
         <div className="App">
-            <Header />
+            <Header signer={signer} />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />

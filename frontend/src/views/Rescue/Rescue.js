@@ -93,7 +93,6 @@ const Rescue = (props) => {
                 </Row>
                 <Row className="mt-5">
                     <Col>
-                        <Button onClick={connectWalletHandler}>Connect Wallet</Button>
                     </Col>
                     <Col>
                         <Button onClick={() => rescueFunc(exposedEOA, signer, frozenContract)}>Initiate Rescue</Button> 

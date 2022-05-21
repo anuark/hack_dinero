@@ -4,8 +4,8 @@ import { useResovedPath } from 'react-router-dom';
 // import Logo from '../assets/logo.png';
 import Logo from '../assets/baywatch_logo.png';
 
-const Header = () => {
-    
+const Header = (props) => {
+    const { signer } = props;
 
     return (
         <Navbar bg="dark" variant="light">
@@ -27,11 +27,16 @@ const Header = () => {
           />{' '}
         </Navbar.Brand>*/}
 
-                <Nav className="me-auto justify-content-center">
+                <Nav defaultActiveKey="/home" as="ul" className="me-auto justify-content-center">
                     <Nav.Link className="text-white" href="#what">What we do</Nav.Link>
                     <Nav.Link className="text-white" href="#how">How we do it</Nav.Link>
                     <Nav.Link className="text-white" href="#who">Who is it for</Nav.Link>
                     {/* <Nav.Link href="/">Submit Proposal</Nav.Link> */}
+                </Nav>
+                <Nav>
+                    <Nav.Item className="text-white">
+                        { signer != null ? "⚡️ Wallet Connected" : "No wallet connected" }
+                    </Nav.Item>
                 </Nav>
             </Container>
         </Navbar>
