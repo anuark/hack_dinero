@@ -1,12 +1,9 @@
 import React from 'react';
-import { Navbar, Nav, Form, FormControl, Button, Container } from 'react-bootstrap';
-import { useResovedPath } from 'react-router-dom';
-// import Logo from '../assets/logo.png';
+import { Navbar, Nav, Container } from 'react-bootstrap';
+
 import Logo from '../assets/baywatch_logo.png';
 
-const Header = (props) => {
-  const { signer } = props;
-
+const Header = ({ signer }) => {
   return (
     <Navbar bg="dark" variant="light">
       <Container>

@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import './App.css';
+import React, { useState } from 'react';
+
 import Home from './views/Home/Home.js';
 import Rescue from './views/Rescue/Rescue.js';
 import Success from './views/Success/Success.js';
 import Header from './views/Header.js';
 import Footer from './views/Footer.js';
-import React, { useState } from 'react';
+import './App.css';
 
 function App() {
   const [provider, setProvider] = useState('');
