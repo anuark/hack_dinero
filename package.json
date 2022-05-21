@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@flashbots/ethers-provider-bundle": "^0.4.3",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "hardhat": "^2.9.3"
   }
 }
