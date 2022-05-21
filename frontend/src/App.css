@@ -9,3 +9,15 @@ footer {
   clear: both;
   padding-top: 20px;
 }
+
+.background {
+  height: calc(100vh - 250px);
+  background-image: url('assets/baywatch_bg.png');
+  background-size: cover;
+}
+
+.well {
+  background-color: white;
+  padding: 15px;
+  border-radius: 15px;
+}

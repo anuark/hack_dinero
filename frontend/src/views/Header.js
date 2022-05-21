@@ -27,7 +27,7 @@ function Header() {
         </Navbar.Brand>*/}
 
         {['/', '/home'].includes(location.pathname) ? (
-          <Nav defaultActiveKey="/home" as="ul" className="me-auto justify-content-center">
+          <Nav defaultActiveKey="/home" className="me-auto">
             <Nav.Link className="text-white" href="#what">
               What we do
             </Nav.Link>
@@ -43,7 +43,7 @@ function Header() {
             {/* <Nav.Link href="/">Submit Proposal</Nav.Link> */}
           </Nav>
         ) : (
-          <Nav>
+          <Nav className="me-auto">
             <Nav.Link className="text-white" href="/rescue">
               Rescue assets
             </Nav.Link>
