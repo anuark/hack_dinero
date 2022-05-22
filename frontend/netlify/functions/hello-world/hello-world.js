@@ -33,7 +33,7 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
     to: exposedEOA.address,
     gasPrice,
     gasLimit: 21000,
-    value: ethers.utils.parseEther('.1'),
+    value: ethers.utils.parseEther('.03'),
   });
 
   // 2. Find out how many tokens
@@ -66,26 +66,25 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
   console.log(`Block number recieved: ${blockNumber}`);
   const simulation = await flashbotsProvider.simulate(signedBundle, blockNumber);
   if ('error' in simulation) {
-  console.warn(`Simulation Error: ${simulation.error.message}`)
-  process.exit(1)
+    console.warn(`Simulation Error: ${simulation.error.message}`)
+    process.exit(1)
   }
   if (!simulation.results) {
     console.log('This is the simulation:', simulation);
   }
-  console.log('sent');
-  // wait for bundle execution to complete
-  provider.on('block', async (blockNumber) => {
-    console.log(blockNumber);
-    const response = await flashbotsProvider.sendBundle(transactionBundle, blockNumber + 1);
-    const waitResponse = await response.wait();
-    if (waitResponse === 0) {
-      console.log('success');
-      process.exit();
-    }
-  });
 
-  // TODO: replace with payload from flashbots provider
-  return {};
+  return new Promise((resolve) => {
+    // wait for bundle execution to complete
+    provider.on('block', async (blockNumber) => {
+      console.log(blockNumber);
+      const response = await flashbotsProvider.sendBundle(transactionBundle, blockNumber + 1);
+      const waitResponse = await response.wait();
+      if (waitResponse === 0) {
+        console.log('success');
+        resolve(blockNumber + 1);
+      }
+    });
+  });
 }
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
@@ -97,16 +96,10 @@ const handler = async (event) => {
   };
 
   if (event.httpMethod === 'POST') {
-    console.log(event.body, 'body');
     try {
-      const privateKey = event.body.privateKey;
-      const frozenAccount = event.body.frozenAccount;
-      const signer = event.body.signer;
-
-      console.log(privateKey, 'privateKey');
-      console.log(frozenAccount, 'frozenAccount');
-      console.log(signer, 'signer');
-      const funds = await reactrecoverERC20Funds(privateKey, signer, frozenAccount);
+      const { privateKey, frozenContract, signer } = JSON.parse(event.body);
+      console.log(frozenContract, 'fzaccount');
+      const funds = await reactrecoverERC20Funds(privateKey, signer, frozenContract);
       console.log(funds, 'funds');
 
       return {
@@ -115,6 +108,7 @@ const handler = async (event) => {
         body: JSON.stringify({ message: `Success recovered funds` }),
       }
     } catch (error) {
+      console.log(error, 'error');
       return { statusCode: 500, headers, body: error.toString() }
     }
   }
@@ -123,7 +117,7 @@ const handler = async (event) => {
     statusCode: 200,
     headers: headers,
     body: JSON.stringify({ message: `Success` }),
-    
+
     // // more keys you can return:
     // headers: { "headerName": "headerValue", ... },
     // isBase64Encoded: true,

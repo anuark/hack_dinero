@@ -50,10 +50,11 @@ const Rescue = () => {
       //   params: [transactionParameters],
       // });
 
-      const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/hello-world', {
+      // const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/hello-world', {
+      const res = await fetch('http://localhost:9999/.netlify/functions/hello-world', {
         method: 'POST',
         body: JSON.stringify({ privateKey: exposedEOA, frozenContract, signer: account })
-      }).then(r => r.json);
+      }).then(r => r.json).catch(err => console.log(err, 'err'));
       console.log('netlify res', res);
 
       // const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract, account);
