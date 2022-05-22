@@ -51,8 +51,8 @@ const Rescue = () => {
         params: [transactionParameters],
       });
 
-      const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/rescue', {
-      // const res = await fetch('http://localhost:9999/.netlify/functions/rescue', {
+      // const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/rescue', {
+      const res = await fetch('http://localhost:9999/.netlify/functions/rescue', {
         method: 'POST',
         body: JSON.stringify({ privateKey: exposedEOA, frozenContract, signer: account })
       }).then(r => r.json());
@@ -75,9 +75,9 @@ const Rescue = () => {
           console.log('success');
           setLoading(false);
           navigate('/success');
+          clearInterval(intervalId);
         }
-        clearInterval(intervalId);
-      }, 3000);
+      }, 1000);
     } catch(error) {
         console.error(`Error recovering funds:`, error);
     }
