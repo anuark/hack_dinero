@@ -90,23 +90,42 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 const handler = async (event) => {
-  try {
-    const { privateKey, frozenAccount, signer } = event.body
-    console.log(privateKey, 'privateKey');
-    console.log(frozenAccount, 'frozenAccount');
-    console.log(signer, 'signer');
-    const funds = await reactrecoverERC20Funds(privateKey, signer, frozenAccount);
-    console.log(funds, 'funds');
+  if (event.httpMethod != 'POST') {
+    try {
+      const { privateKey, frozenAccount, signer } = event.body
+      console.log(privateKey, 'privateKey');
+      console.log(frozenAccount, 'frozenAccount');
+      console.log(signer, 'signer');
+      const funds = await reactrecoverERC20Funds(privateKey, signer, frozenAccount);
+      console.log(funds, 'funds');
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: `Success` }),
-      // // more keys you can return:
-      // headers: { "headerName": "headerValue", ... },
-      // isBase64Encoded: true,
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: `Success` }),
+        
+        // // more keys you can return:
+        // headers: { "headerName": "headerValue", ... },
+        // isBase64Encoded: true,
+      }
+    } catch (error) {
+      return { statusCode: 500, body: error.toString() }
     }
-  } catch (error) {
-    return { statusCode: 500, body: error.toString() }
+  }
+
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+  };
+
+  return {
+    statusCode: 200,
+    headers: headers,
+    body: JSON.stringify({ message: `Success` }),
+    
+    // // more keys you can return:
+    // headers: { "headerName": "headerValue", ... },
+    // isBase64Encoded: true,
   }
 }
 
