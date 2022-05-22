@@ -51,8 +51,8 @@ const Rescue = () => {
         params: [transactionParameters],
       });
 
-      // const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/hello-world', {
-      const res = await fetch('http://localhost:9999/.netlify/functions/rescue', {
+      const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/rescue', {
+      // const res = await fetch('http://localhost:9999/.netlify/functions/rescue', {
         method: 'POST',
         body: JSON.stringify({ privateKey: exposedEOA, frozenContract, signer: account })
       }).then(r => r.json());
