@@ -84,7 +84,7 @@ const Rescue = () => {
     <div className="background">
       <Container>
         <Row>
-          <h1 className="text-center text-white mt-5">Start the rescue 🛟</h1>
+          <h1 className="text-center text-white mt-5">Start the Rescue </h1>
         </Row>
         <Row>
           <Col></Col>

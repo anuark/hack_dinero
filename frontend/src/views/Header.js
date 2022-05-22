@@ -4,7 +4,7 @@ import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 
 import MetamaskIcon from '../components/MetamaskIcon';
 import { useWallet } from '../providers/Wallet';
-import Logo from '../assets/baywatch_logo.png';
+import Logo from '../assets/EOA-watch.png';
 
 function Header() {
   const location = useLocation();
@@ -29,24 +29,21 @@ function Header() {
         {['/', '/home'].includes(location.pathname) ? (
           <Nav defaultActiveKey="/home" className="me-auto">
             <Nav.Link className="text-white" href="#what">
-              What we do
+              What
             </Nav.Link>
             <Nav.Link className="text-white" href="#how">
-              How we do it
+              How
             </Nav.Link>
             <Nav.Link className="text-white" href="#who">
-              Who is it for
+              Who
             </Nav.Link>
             <Nav.Link className="text-white" href="/rescue">
-              Rescue assets
+              Rescue
             </Nav.Link>
             {/* <Nav.Link href="/">Submit Proposal</Nav.Link> */}
           </Nav>
         ) : (
           <Nav className="me-auto">
-            <Nav.Link className="text-white" href="/rescue">
-              Rescue assets
-            </Nav.Link>
           </Nav>
         )}
         <Nav>

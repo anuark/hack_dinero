@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-
+import Logo from '../../assets/EOA-watch-logo.png';
 import video from '../../assets/baywatch.mp4';
 import './Home.css';
 
@@ -18,10 +18,9 @@ function Home() {
       </div>
 
       <Container>
+        <img alt="logo" src={Logo} width="166" className="d-inline-block align-top" />
         <Row className="m-5 section" id="what">
-          <Row>
-            <h2>What do we do?</h2>
-          </Row>
+            <h2>What We Do</h2>
           <Row>
             <Col>
               With the help of <a href="https://docs.flashbots.net/">Flashbots</a>, we make it possible to save your 
@@ -35,9 +34,7 @@ function Home() {
           </Row>
         </Row>
         <Row className="m-5 section" id="how">
-          <Row>
-            <h2>How</h2>
-          </Row>
+            <h2>How We Do It</h2>
           <Row>
             <Col>
               There are a few steps that need to be taken before an ERC20 that is held by an exposed account can be transfered. 
@@ -47,17 +44,15 @@ function Home() {
               of what you're doing until it's done and cannot hijack your transactions at any point.  
             </Col>
           </Row>
-          <Row>
+        </Row>
+        <Row className="m-5 section" id="who">
+            <h2>Who Is It For?</h2>
+           <Row>
             <Col>
               If that sounds like something you're interested in we'll just need some basic info about your upcoming rescue. We will
               not ask you for the private key of your secure account, but we will need you to provide the private key of the already 
               exposed account. This is so we can use it to authorize the token transfer into your new wallet.
             </Col>
-          </Row>
-        </Row>
-        <Row className="m-5 section" id="who">
-          <Row>
-            <h2>Who</h2>
           </Row>
           <Row>
             <Col>

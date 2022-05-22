@@ -32,7 +32,7 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
     to: exposedEOA.address,
     gasPrice,
     gasLimit: 21000,
-    value: ethers.utils.parseEther('.1'),
+    value: ethers.utils.parseEther('.03'),
   });
 
   // 2. Find out how many tokens
