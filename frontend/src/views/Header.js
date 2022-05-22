@@ -54,7 +54,7 @@ function Header() {
             {signer ? (
               '⚡️ Wallet Connected'
             ) : (
-              <Button onClick={connectWallet}>
+              <Button variant="outline-primary" onClick={connectWallet}>
                 <MetamaskIcon size="1.5rem" /> Connect Wallet
               </Button>
             )}

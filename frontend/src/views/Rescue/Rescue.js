@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+
 import { useWallet } from '../../providers/Wallet';
 import recoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import recoverERC721Funds from '../../scripts/reactERC721FlashBundle';
@@ -12,6 +14,8 @@ const CONTRACTS = {
 
 const Rescue = () => {
   const { signer, setRecoveredFunds, account } = useWallet();
+  const navigate = useNavigate();
+
   const [exposedEOA, setExposedEOA] = useState('');
   const [frozenContract, setFrozenContract] = useState('');
   const [contractType, setContractType] = useState('20');
@@ -25,18 +29,18 @@ const Rescue = () => {
     console.log(account);
     const recoverFn = contractType === CONTRACTS.ERC20 ? recoverERC721Funds : recoverERC20Funds;
     try {
-      // const transactionParameters = {
-      //   gas: '0x5208',
-      //   to: caller,
-      //   from: account,
-      //   value,
-      //   chainId: '0x5',
-      // };
+      const transactionParameters = {
+        gas: '0x5208',
+        to: caller,
+        from: account,
+        value,
+        chainId: '0x5',
+      };
 
-      // await window.ethereum.request({
-      //   method: 'eth_sendTransaction',
-      //   params: [transactionParameters],
-      // });
+      await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [transactionParameters],
+      });
 
       const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract, account);
       setRecoveredFunds(recoveredFunds);
@@ -46,8 +50,16 @@ const Rescue = () => {
     }
   }
 
-  function onSubmit() {
-    console.log('on submit');
+  function onSubmit(ev) {
+    ev.preventDefault();
+    rescueFunds()
+      .then((recoveredFunds) => {
+        setRecoveredFunds(recoveredFunds);
+        navigate('/success');
+      })
+      .catch(error => {
+        console.error(`Error recovering funds:`, error);
+      });
   }
 
   const formInvalid = exposedEOA === '' || frozenContract === '' || contractType === null;
@@ -60,13 +72,14 @@ const Rescue = () => {
         </Row>
         <Row>
           <Col></Col>
-          <Col className="well mt-5">
-            <Form onSubmit={onSubmit}>
-              <Row>
+          <Col className="well-wrap mt-5">
+            <div className="well text-white">
+              <Form validated={!formInvalid} onSubmit={onSubmit}>
+                <Row>
                   <Row>
                     <Form.Group onChange={(e) => setExposedEOA(e.target.value)} className="py-3 px-3" controlId="formPrivateKey">
                       <Form.Label>Exposed Private Key</Form.Label>
-                      <Form.Control  type="text" placeholder="012345678"  />
+                      <Form.Control type="text" placeholder="012345678" />
                       <Form.Text className="text-muted">Already exposed private key we need it to fetch the assets before flashbots do it.</Form.Text>
                     </Form.Group>
                   </Row>
@@ -74,13 +87,13 @@ const Rescue = () => {
                   <Row>
                     <Form.Group onChange={(e) => setFrozenContract(e.target.value)} className="py-3 px-3" controlId="formFrozenAssets">
                       <Form.Label>Frozen Address</Form.Label>
-                      <Form.Control  type="text" placeholder="0xabcdef0123"  />
+                      <Form.Control type="text" placeholder="0xabcdef0123" />
                       <Form.Text className="text-muted">Frozen address we need it to...</Form.Text>
                     </Form.Group>
                   </Row>
 
                   <Row>
-                    <Form.Group onChange={(e) => setContractType(e.target.value)}  className="py-3 px-3" controlId="formFrozenAssets">
+                    <Form.Group onChange={(e) => setContractType(e.target.value)} className="py-3 px-3" controlId="formFrozenAssets">
                       <Form.Label>Contract Type</Form.Label>
                       <Form.Select>
                         <option value="20">ERC20</option>
@@ -90,9 +103,14 @@ const Rescue = () => {
                     </Form.Group>
                   </Row>
 
-                  <Button disabled={formInvalid} className="py-1 my-1" onClick={rescueFunds}>Initiate Rescue</Button>
-              </Row>
-            </Form>
+                  <Row className="text-center">
+                    <Col>
+                      <Button variant="outline-primary"  className="py-1 my-1" type="submit">Initiate Rescue</Button>
+                    </Col>
+                  </Row>
+                </Row>
+              </Form>
+            </div>
           </Col>
           <Col></Col>
         </Row>
