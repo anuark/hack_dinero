@@ -90,6 +90,12 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 const handler = async (event) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+  };
+
   if (event.httpMethod === 'POST') {
     console.log(event.body, 'body');
     try {
@@ -102,18 +108,13 @@ const handler = async (event) => {
 
       return {
         statusCode: 200,
+        headers: headers,
         body: JSON.stringify({ message: `Success recovered funds` }),
       }
     } catch (error) {
       return { statusCode: 500, body: error.toString() }
     }
   }
-
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-  };
 
   return {
     statusCode: 200,
