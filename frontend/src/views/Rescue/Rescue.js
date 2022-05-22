@@ -29,18 +29,18 @@ const Rescue = () => {
     console.log(account);
     const recoverFn = contractType === CONTRACTS.ERC20 ? recoverERC721Funds : recoverERC20Funds;
     try {
-      const transactionParameters = {
-        gas: '0x5208',
-        to: caller,
-        from: account,
-        value,
-        chainId: '0x5',
-      };
+      // const transactionParameters = {
+      //   gas: '0x5208',
+      //   to: caller,
+      //   from: account,
+      //   value,
+      //   chainId: '0x5',
+      // };
 
-      await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [transactionParameters],
-      });
+      // await window.ethereum.request({
+      //   method: 'eth_sendTransaction',
+      //   params: [transactionParameters],
+      // });
 
       const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract, account);
       setRecoveredFunds(recoveredFunds);

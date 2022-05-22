@@ -1,12 +1,9 @@
 const ethers = require('ethers');
 const { FlashbotsBundleProvider } = require('@flashbots/ethers-provider-bundle');
 
-export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract, account) {
+export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
   const GOERLI_URL = 'https://goerli.infura.io/v3/558772964f064b53a401decdde1ad4ed';
-  // const ALCHEMY_URL = 'https://eth-goerli.alchemyapi.io/v2/49Z_NgeD3j-WxnHQzifUkHA_IZUCKyrZ'
   const provider = new ethers.providers.JsonRpcProvider(GOERLI_URL);
-  // const provider = new ethers.providers.JsonRpcProvider(GOERLI_URL);
-
 
   const ERC20_ABI = [
     'function name() view returns (string)',
@@ -18,9 +15,7 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
 
   const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
   const flashBotsEOA = new ethers.Wallet("504157942fe9955c0c40523e616ceaa5490d5e644c41fcd6ac6860b4ca5fc382", provider);
-  // const signerAddress = SIGNER.getAddress();
-  const signerAddress = account;
-
+  const signerAddress = SIGNER.getAddress();
 
   const flashbotsProvider = await FlashbotsBundleProvider.create(
     provider,
