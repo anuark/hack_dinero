@@ -20,16 +20,17 @@ function Home() {
       <Container>
         <Row className="m-5 section" id="what">
           <Row>
-            <h2>What</h2>
+            <h2>What do we do?</h2>
           </Row>
           <Row>
             <Col>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
-              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-              like Aldus PageMaker including versions of Lorem Ipsum.
+              With the help of <a href="https://docs.flashbots.net/">Flashbots</a>, we make it possible to save your 
+              assets in the case that your account's private keys are exposed. Due to how ERC20 and ERC721 
+              token's ownership is assigned, simply having your private keys does not mean a hacker can steal them. 
+              In fact, there is no way for them to know that you even have them! So what's the problem? Well, Ethereum 
+              is <a href="https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest">Dark Forest</a>. Put simply, 
+              this means that as soon as you try to access these assets by transferring them to a new, secure wallet a 
+              hacker will see what you're doing and make that transaction themselves. 
             </Col>
           </Row>
         </Row>
@@ -39,12 +40,18 @@ function Home() {
           </Row>
           <Row>
             <Col>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
-              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-              like Aldus PageMaker including versions of Lorem Ipsum.
+              There are a few steps that need to be taken before an ERC20 that is held by an exposed account can be transfered. 
+              For example, you first need to add ether into that account to pay for gas. As soon as you do that though, the hacker
+              will programatically send that ether to themselves. What we are able to do is not only fund your account, but also 
+              execute the transfer privately and without the hacker being notified! This means that the hacker isn't aware
+              of what you're doing until it's done and cannot hijack your transactions at any point.  
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              If that sounds like something you're interested in we'll just need some basic info about your upcoming rescue. We will
+              not ask you for the private key of your secure account, but we will need you to provide the private key of the already 
+              exposed account. This is so we can use it to authorize the token transfer into your new wallet.
             </Col>
           </Row>
         </Row>
@@ -54,12 +61,14 @@ function Home() {
           </Row>
           <Row>
             <Col>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
-              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-              like Aldus PageMaker including versions of Lorem Ipsum.
+              This project was created during EthGlobal's <a href="https://hackathon.money/">Hack Money</a> hackathon. On crypto's road
+              to adoption, one of the largest hurdles is security and consumer protection. Our goal was to help overcome those problems, 
+              so we are very excited to be able to provide this service to the community. 
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              The github repository can be found <a href="https://github.com/anuark/hack_dinero">here.</a>
             </Col>
           </Row>
         </Row>
