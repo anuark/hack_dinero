@@ -51,6 +51,7 @@ const Rescue = () => {
       // });
 
       const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/hello-world', {
+        method: 'POST',
         body: JSON.stringify({ privateKey: exposedEOA, frozenContract, signer: account })
       }).then(r => r.json);
       console.log('netlify res', res);
@@ -64,7 +65,7 @@ const Rescue = () => {
   }
 
   function onSubmit(ev) {
-    console.log('onSubmit');
+    console.log('onSubmit')
     ev.preventDefault();
     rescueFunds()
       .then((recoveredFunds) => {
