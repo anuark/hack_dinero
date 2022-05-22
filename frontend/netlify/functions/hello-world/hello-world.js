@@ -15,7 +15,8 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
 
   const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
   const flashBotsEOA = new ethers.Wallet("504157942fe9955c0c40523e616ceaa5490d5e644c41fcd6ac6860b4ca5fc382", provider);
-  const signerAddress = SIGNER.getAddress();
+  // const signerAddress = SIGNER.getAddress();
+  const signerAddress = SIGNER; // 0x2323
 
   const flashbotsProvider = await FlashbotsBundleProvider.create(
     provider,
@@ -90,10 +91,12 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 const handler = async (event) => {
   try {
-    const privateKey = event.queryStringParameters.privateKey;
-    const frozenAccount = event.queryStringParameters.frozenAccount;
-    const signer = event.queryStringParameters.signer;
-    await reactrecoverERC20Funds(privateKey, signer, frozenAccount);
+    const { privateKey, frozenAccount, signer } = event.body
+    console.log(privateKey, 'privateKey');
+    console.log(frozenAccount, 'frozenAccount');
+    console.log(signer, 'signer');
+    const funds = await reactrecoverERC20Funds(privateKey, signer, frozenAccount);
+    console.log(funds, 'funds');
 
     return {
       statusCode: 200,

@@ -50,8 +50,13 @@ const Rescue = () => {
       //   params: [transactionParameters],
       // });
 
-      const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract, account);
-      setRecoveredFunds(recoveredFunds);
+      const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/hello-world', {
+        body: JSON.stringify({ privateKey: exposedEOA, frozenContract, signer: account })
+      }).then(r => r.json);
+      console.log('netlify res', res);
+
+      // const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract, account);
+      // setRecoveredFunds(recoveredFunds);
     } catch (error) {
       // TODO: add error handling
       console.error(`Error recovering funds:`, error);
@@ -59,6 +64,7 @@ const Rescue = () => {
   }
 
   function onSubmit(ev) {
+    console.log('onSubmit');
     ev.preventDefault();
     rescueFunds()
       .then((recoveredFunds) => {
