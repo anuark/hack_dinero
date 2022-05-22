@@ -11,8 +11,6 @@ module.exports = {
     goerli: {
       url: process.env.GOERLI_URL,
       accounts: [process.env.EXPOSED_PK],
-      gas: 2100000,
-      gasPrice: 8000000000,
     },
   },
   etherscan: {

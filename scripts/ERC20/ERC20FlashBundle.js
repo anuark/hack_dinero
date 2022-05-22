@@ -1,6 +1,6 @@
 require('dotenv').config();
-const ethers = require('ethers');
 const { FlashbotsBundleProvider } = require('@flashbots/ethers-provider-bundle');
+const ethers = require('ethers');
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_URL);
 
@@ -85,4 +85,4 @@ async function recoverERC20Funds(exposedEOA, secureEOA, frozenContract, abi) {
   });
 }
 
-export default recoverERC20Funds;
+recoverERC20Funds(EXPOSED_EOA, SECURE_EOA, FROZEN_ASSETS, ERC20_ABI);
