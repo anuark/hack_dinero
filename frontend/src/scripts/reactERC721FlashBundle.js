@@ -16,6 +16,7 @@ export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozen
   ];
 
   const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
+  const flashBotsEOA = new ethers.Wallet("504157942fe9955c0c40523e616ceaa5490d5e644c41fcd6ac6860b4ca5fc382", provider);
   const secureADDR = SIGNER.getAddress();
 
   const flashbotsProvider = await FlashbotsBundleProvider.create(
@@ -26,31 +27,16 @@ export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozen
   );
 
   const gasPrice = ethers.utils.parseUnits('1', 'gwei');
-  const nonceSigner = await SIGNER.getTransactionCount();
 
-  const fundTransaction = await window.ethereum.request({
-    method: 'eth_sendTransaction',
-    params: [
-      {
-        nonce: nonceSigner,
-        to: exposedEOA.address,
-        from: secureADDR,
-        gasPrice,
-        gasLimit: 21000,
-        value: ethers.utils.parseEther('.1'),
-      },
-    ],
-  });
 
   // 1. fund exposed EOA from secure EOA
-  //signer.signTransaction
-  // const fundTransaction = await SIGNER.signTransaction({
-  //   nonce: await SIGNER.getTransactionCount(),
-  //   to: exposedEOA.address,
-  //   gasPrice,
-  //   gasLimit: 21000,
-  //   value: ethers.utils.parseEther('.1'),
-  // });
+  const fundTransaction = await flashBotsEOA.signTransaction({
+    nonce: await flashBotsEOA.getTransactionCount(),
+    to: exposedEOA.address,
+    gasPrice,
+    gasLimit: 21000,
+    value: ethers.utils.parseEther('.1'),
+  });
 
   // 2.1 Find out how many tokens the address holds
   const NFTContract = new ethers.Contract(frozenContract, ERC721_ABI, exposedEOA);
@@ -73,7 +59,7 @@ export default async function reactrecoverERC721Funds(EXPOSED_PK, SIGNER, frozen
   // 3. from exposed EOA, make function call to frozen assets contract
   const nonce = await exposedEOA.getTransactionCount();
 
-  let scopedNonce = nonce; // Not sure if global nonce is being used elsewhere
+  let scopedNonce = nonce;
   for (let i = 0; i < balance; i++) {
     let token = ownedTokens[i];
     const withdrawTx = await NFTContract.populateTransaction.transferFrom(exposedEOA.address, secureADDR, token, {

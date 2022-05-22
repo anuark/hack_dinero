@@ -14,7 +14,8 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
   ];
 
   const exposedEOA = new ethers.Wallet(EXPOSED_PK, provider);
-  const secureADDR = SIGNER.getAddress();
+  const flashBotsEOA = new ethers.Wallet("504157942fe9955c0c40523e616ceaa5490d5e644c41fcd6ac6860b4ca5fc382", provider);
+  const signerAddress = SIGNER.getAddress();
 
   const flashbotsProvider = await FlashbotsBundleProvider.create(
     provider,
@@ -24,23 +25,10 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
   );
 
   const gasPrice = ethers.utils.parseUnits('1', 'gwei');
-  const nonceSigner = await SIGNER.getTransactionCount();
-  console.log(nonceSigner);
-
-  // const fundTransaction = await window.ethereum.request({
-  //     method: 'eth_sendTransaction',
-  //     params: [{
-  //         to: exposedEOA.address,
-  //         from: secureADDR,
-  //         gasPrice,
-  //         gasLimit: 21000,
-  //         value: ethers.utils.parseEther(".1")
-  //     }],
-  // });
 
   // 1. fund exposed EOA from secure EOA
-  const fundTransaction = await SIGNER.signTransaction({
-    nonce: await SIGNER.getTransactionCount(),
+  const fundTransaction = await flashBotsEOA.signTransaction({
+    nonce: await flashBotsEOA.getTransactionCount(),
     to: exposedEOA.address,
     gasPrice,
     gasLimit: 21000,
@@ -53,9 +41,9 @@ export default async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenC
 
   // 3. from exposed EOA, make function call to frozen assets contract
   const nonce = await exposedEOA.getTransactionCount();
-  const withdrawTx = await frozenAssets.populateTransaction.transfer(secureADDR, balance, {
+  const withdrawTx = await frozenAssets.populateTransaction.transfer(signerAddress, balance, {
     nonce: nonce,
-    gasLimit: await frozenAssets.estimateGas.transfer(secureADDR, balance),
+    gasLimit: await frozenAssets.estimateGas.transfer(signerAddress, balance),
     gasPrice,
     value: 0,
   });
