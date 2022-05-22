@@ -99,7 +99,10 @@ const handler = async (event) => {
   if (event.httpMethod === 'POST') {
     console.log(event.body, 'body');
     try {
-      const { privateKey, frozenAccount, signer } = event.body
+      const privateKey = event.body.privateKey;
+      const frozenAccount = event.body.frozenAccount;
+      const signer = event.body.signer;
+
       console.log(privateKey, 'privateKey');
       console.log(frozenAccount, 'frozenAccount');
       console.log(signer, 'signer');
@@ -112,7 +115,7 @@ const handler = async (event) => {
         body: JSON.stringify({ message: `Success recovered funds` }),
       }
     } catch (error) {
-      return { statusCode: 500, body: error.toString() }
+      return { statusCode: 500, headers, body: error.toString() }
     }
   }
 
