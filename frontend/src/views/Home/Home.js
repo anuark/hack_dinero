@@ -12,7 +12,7 @@ function Home() {
           <source src={video} type="video/mp4" />
         </video>
         <div id="mask"></div>
-        <Button id="btn-action" href="/rescue">
+        <Button variant="outline-primary" id="btn-action" href="/rescue">
           Rescue your assets
         </Button>
       </div>

@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Cardo:wght@700&display=swap');
+:root {
+  --blue: #0bd3d3;
+  --pink: #f890e7;
+  --font: Cardo;
+  --dark: #222;
+}
+
 body {
   background-color: #000;
 }
@@ -10,14 +18,46 @@ footer {
   padding-top: 20px;
 }
 
+h1 {
+  font-family: var(--font);
+  font-size: 3vw;
+  vertical-align: middle;
+  display: table-cell;
+}
+
 .background {
   height: 100vh;
   background-image: url('assets/baywatch_bg.png');
   background-size: cover;
 }
 
+.well-wrap {
+  padding: 5px;
+  background: linear-gradient(to right, var(--blue), var(--pink));
+  border-radius: 15px;
+}
 .well {
-  background-color: white;
+  background-color: var(--dark);
   padding: 15px;
   border-radius: 15px;
 }
+
+.nav-link {
+  font-family: var(--font);
+}
+
+.btn-outline-primary {
+  border-color: var(--blue);
+  border-width: 3px;
+  color: var(--pink);
+}
+.btn-outline-primary:disabled {
+  color: var(--pink);
+}
+.btn-outline-primary:hover {
+  border-color: var(--pink);
+  border-width: 3px;
+  color: var(--blue);
+  background-color: var(--pink);
+}
+
