@@ -11,7 +11,7 @@ footer {
 }
 
 .background {
-  height: calc(100vh - 150px);
+  height: 100vh;
   background-image: url('assets/baywatch_bg.png');
   background-size: cover;
 }
