@@ -15,6 +15,7 @@ const WalletProvider = ({ children }) => {
   const [signer, setSigner] = useState(null);
   const [provider, setProvider] = useState(null);
   const [recoveredFunds, setRecoveredFunds] = useState(null);
+  const [account, setAccount] = useState();
 
   async function connectWallet() {
     const { ethereum } = window;
@@ -25,7 +26,8 @@ const WalletProvider = ({ children }) => {
     }
 
     try {
-      await ethereum.request({ method: 'eth_requestAccounts' });
+      const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+      setAccount(accounts[0]);
       const provider = new ethers.providers.Web3Provider(ethereum);
 
       setProvider(provider);
@@ -37,8 +39,8 @@ const WalletProvider = ({ children }) => {
   }
 
   const contextValue = useMemo(
-    () => ({ connectWallet, signer, provider, recoveredFunds, setRecoveredFunds }),
-    [provider, recoveredFunds, signer]
+    () => ({ connectWallet, signer, provider, recoveredFunds, setRecoveredFunds, account }),
+    [provider, recoveredFunds, signer, account]
   );
 
   return <WalletContext.Provider value={contextValue}>{children}</WalletContext.Provider>;

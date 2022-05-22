@@ -11,7 +11,7 @@ const CONTRACTS = {
 };
 
 const Rescue = () => {
-  const { signer, setRecoveredFunds } = useWallet();
+  const { signer, setRecoveredFunds, account } = useWallet();
   const [exposedEOA, setExposedEOA] = useState('');
   const [frozenContract, setFrozenContract] = useState('');
   const [contractType, setContractType] = useState('20');
