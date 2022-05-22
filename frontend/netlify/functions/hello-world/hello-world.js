@@ -90,7 +90,8 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 const handler = async (event) => {
-  if (event.httpMethod != 'POST') {
+  if (event.httpMethod === 'POST') {
+    console.log(event.body, 'body');
     try {
       const { privateKey, frozenAccount, signer } = event.body
       console.log(privateKey, 'privateKey');
@@ -101,11 +102,7 @@ const handler = async (event) => {
 
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: `Success` }),
-        
-        // // more keys you can return:
-        // headers: { "headerName": "headerValue", ... },
-        // isBase64Encoded: true,
+        body: JSON.stringify({ message: `Success recovered funds` }),
       }
     } catch (error) {
       return { statusCode: 500, body: error.toString() }
