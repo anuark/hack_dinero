@@ -61,3 +61,7 @@ h1 {
   background-color: var(--pink);
 }
 
+.text-blue {
+  color: var(--blue);
+}
+

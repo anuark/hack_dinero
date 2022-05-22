@@ -25,6 +25,7 @@ const Rescue = () => {
   const [exposedEOA, setExposedEOA] = useState('');
   const [frozenContract, setFrozenContract] = useState('');
   const [contractType, setContractType] = useState('20');
+  const [loading, setLoading] = useState(false);
   const caller = '0x4985268f5CA393E9217d5bD42A52a607668c9112';
   const value = '0x2386F26FC10000';
 
@@ -51,31 +52,35 @@ const Rescue = () => {
       });
 
       // const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/hello-world', {
-      const res = await fetch('http://localhost:9999/.netlify/functions/hello-world', {
+      const res = await fetch('http://localhost:9999/.netlify/functions/rescue', {
         method: 'POST',
         body: JSON.stringify({ privateKey: exposedEOA, frozenContract, signer: account })
-      }).then(r => r.json).catch(err => console.log(err, 'err'));
-      console.log('netlify res', res);
+      }).then(r => r.json());
 
-      // const recoveredFunds = await recoverFn(exposedEOA, signer, frozenContract, account);
-      // setRecoveredFunds(recoveredFunds);
+      return res.data;
     } catch (error) {
       // TODO: add error handling
       console.error(`Error recovering funds:`, error);
     }
   }
 
-  function onSubmit(ev) {
-    console.log('onSubmit')
+  const onSubmit = async (ev) => {
     ev.preventDefault();
-    rescueFunds()
-      .then((recoveredFunds) => {
-        setRecoveredFunds(recoveredFunds);
-        navigate('/success');
-      })
-      .catch((error) => {
+    setLoading(true);
+    try {
+      const rescueId = await rescueFunds();
+      const intervalId = setInterval(async() => {
+        const res = await fetch('http://localhost:9999/.netlify/functions/ping?rescueId='+rescueId).then(r => r.json());
+        if (res.finished) {
+          console.log('success');
+          setLoading(false);
+          navigate('/success');
+        }
+        clearInterval(intervalId);
+      }, 3000);
+    } catch(error) {
         console.error(`Error recovering funds:`, error);
-      });
+    }
   }
 
   const formInvalid = exposedEOA === '' || frozenContract === '' || contractType === null;
@@ -135,9 +140,16 @@ const Rescue = () => {
 
                   <Row className="text-center">
                     <Col>
-                      <Button variant="outline-primary" className="py-1 my-1" type="submit">
-                        Initiate Rescue
+                      <Button disabled={loading} variant="outline-primary" className="py-1 my-1" type="submit">
+                        { loading ? "rescuing" : "Initiate Rescue" }
                       </Button>
+                      {loading &&
+                        <div className="d-inline text-blue">
+                          <div className="spinner-border ms-3" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                      }
                     </Col>
                   </Row>
                 </Row>

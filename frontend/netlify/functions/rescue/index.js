@@ -1,5 +1,7 @@
+const { connectDb, Rescue } = require('../db.js');
 const ethers = require('ethers');
 const { FlashbotsBundleProvider } = require('@flashbots/ethers-provider-bundle');
+
 
 async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
   const GOERLI_URL = 'https://goerli.infura.io/v3/558772964f064b53a401decdde1ad4ed';
@@ -73,18 +75,24 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
     console.log('This is the simulation:', simulation);
   }
 
-  return new Promise((resolve) => {
-    // wait for bundle execution to complete
-    provider.on('block', async (blockNumber) => {
-      console.log(blockNumber);
-      const response = await flashbotsProvider.sendBundle(transactionBundle, blockNumber + 1);
-      const waitResponse = await response.wait();
-      if (waitResponse === 0) {
-        console.log('success');
-        resolve(blockNumber + 1);
-      }
-    });
+  const rescue = new Rescue({ signer: signerAddress, frozenContract });
+  await rescue.save();
+
+  // wait for bundle execution to complete
+  provider.on('block', async (blockNumber) => {
+    console.log(blockNumber, 'blockNumber');
+    const response = await flashbotsProvider.sendBundle(transactionBundle, blockNumber + 1);
+    const waitResponse = await response.wait();
+    rescue.blockNumber = blockNumber;
+    if (waitResponse === 0) {
+      console.log('success');
+      rescue.blockNumber = blockNumber + 1;
+      rescue.finished = true;
+    }
+    await rescue.save();
   });
+
+  return rescue._id;
 }
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
@@ -97,15 +105,20 @@ const handler = async (event) => {
 
   if (event.httpMethod === 'POST') {
     try {
+      await connectDb();
+
+      // testing
+      // const rescue = new Rescue();
+      // rescue.save();
+      // let rescueId = rescue._id;
+
       const { privateKey, frozenContract, signer } = JSON.parse(event.body);
-      console.log(frozenContract, 'fzaccount');
-      const funds = await reactrecoverERC20Funds(privateKey, signer, frozenContract);
-      console.log(funds, 'funds');
+      const rescueId = await reactrecoverERC20Funds(privateKey, signer, frozenContract);
 
       return {
         statusCode: 200,
         headers: headers,
-        body: JSON.stringify({ message: `Success recovered funds` }),
+        body: JSON.stringify({ message: `Success recovered funds`, data: rescueId }),
       }
     } catch (error) {
       console.log(error, 'error');
