@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,21 +13,29 @@ const CONTRACTS = {
 };
 
 const Rescue = () => {
-  const { signer, setRecoveredFunds, account } = useWallet();
+  const { signer, setRecoveredFunds, connectWallet, account } = useWallet();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!signer) {
+      connectWallet();
+    }
+  }, [connectWallet, signer]);
 
   const [exposedEOA, setExposedEOA] = useState('');
   const [frozenContract, setFrozenContract] = useState('');
   const [contractType, setContractType] = useState('20');
   const caller = '0x4985268f5CA393E9217d5bD42A52a607668c9112';
-  const value = "0x2386F26FC10000";
+  const value = '0x2386F26FC10000';
 
   if (!signer) {
     // TODO: review auto-connecting to wallet
   }
+
   async function rescueFunds() {
     console.log(account);
     const recoverFn = contractType === CONTRACTS.ERC20 ? recoverERC721Funds : recoverERC20Funds;
+
     try {
       // const transactionParameters = {
       //   gas: '0x5208',
@@ -57,7 +65,7 @@ const Rescue = () => {
         setRecoveredFunds(recoveredFunds);
         navigate('/success');
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(`Error recovering funds:`, error);
       });
   }
@@ -77,15 +85,25 @@ const Rescue = () => {
               <Form validated={!formInvalid} onSubmit={onSubmit}>
                 <Row>
                   <Row>
-                    <Form.Group onChange={(e) => setExposedEOA(e.target.value)} className="py-3 px-3" controlId="formPrivateKey">
+                    <Form.Group
+                      onChange={(e) => setExposedEOA(e.target.value)}
+                      className="py-3 px-3"
+                      controlId="formPrivateKey"
+                    >
                       <Form.Label>Exposed Private Key</Form.Label>
                       <Form.Control type="text" placeholder="012345678" />
-                      <Form.Text className="text-muted">Already exposed private key we need it to fetch the assets before flashbots do it.</Form.Text>
+                      <Form.Text className="text-muted">
+                        Already exposed private key we need it to fetch the assets before flashbots do it.
+                      </Form.Text>
                     </Form.Group>
                   </Row>
 
                   <Row>
-                    <Form.Group onChange={(e) => setFrozenContract(e.target.value)} className="py-3 px-3" controlId="formFrozenAssets">
+                    <Form.Group
+                      onChange={(e) => setFrozenContract(e.target.value)}
+                      className="py-3 px-3"
+                      controlId="formFrozenAssets"
+                    >
                       <Form.Label>Frozen Address</Form.Label>
                       <Form.Control type="text" placeholder="0xabcdef0123" />
                       <Form.Text className="text-muted">Frozen address we need it to...</Form.Text>
@@ -93,7 +111,11 @@ const Rescue = () => {
                   </Row>
 
                   <Row>
-                    <Form.Group onChange={(e) => setContractType(e.target.value)} className="py-3 px-3" controlId="formFrozenAssets">
+                    <Form.Group
+                      onChange={(e) => setContractType(e.target.value)}
+                      className="py-3 px-3"
+                      controlId="formFrozenAssets"
+                    >
                       <Form.Label>Contract Type</Form.Label>
                       <Form.Select>
                         <option value="20">ERC20</option>
@@ -105,7 +127,9 @@ const Rescue = () => {
 
                   <Row className="text-center">
                     <Col>
-                      <Button variant="outline-primary"  className="py-1 my-1" type="submit">Initiate Rescue</Button>
+                      <Button variant="outline-primary" className="py-1 my-1" type="submit">
+                        Initiate Rescue
+                      </Button>
                     </Col>
                   </Row>
                 </Row>
