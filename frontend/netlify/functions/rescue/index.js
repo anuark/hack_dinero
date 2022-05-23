@@ -88,7 +88,6 @@ async function reactrecoverERC20Funds(EXPOSED_PK, SIGNER, frozenContract) {
       console.log('success');
       rescue.blockNumber = blockNumber + 1;
       rescue.finished = true;
-      process.exit(0);
     }
     await rescue.save();
   });

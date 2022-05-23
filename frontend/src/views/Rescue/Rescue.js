@@ -51,8 +51,8 @@ const Rescue = () => {
         params: [transactionParameters],
       });
 
-      // const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/rescue', {
-      const res = await fetch('http://localhost:9999/.netlify/functions/rescue', {
+      const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/rescue', {
+      // const res = await fetch('http://localhost:9999/.netlify/functions/rescue', {
         method: 'POST',
         body: JSON.stringify({ privateKey: exposedEOA, frozenContract, signer: account })
       }).then(r => r.json());
@@ -70,7 +70,8 @@ const Rescue = () => {
     try {
       const rescueId = await rescueFunds();
       const intervalId = setInterval(async() => {
-        const res = await fetch('http://localhost:9999/.netlify/functions/ping?rescueId='+rescueId).then(r => r.json());
+        const res = await fetch('https://hack-dinero.netlify.app/.netlify/functions/ping?rescueId='+rescueId).then(r => r.json());
+        // const res = await fetch('http://localhost:9999/.netlify/functions/ping?rescueId='+rescueId).then(r => r.json());
         if (res.finished) {
           console.log('success');
           setLoading(false);
